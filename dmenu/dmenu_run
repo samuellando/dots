@@ -1,0 +1,3 @@
+#!/bin/bash
+PATH=~/bin:$PATH
+dmenu_path | dmenu "$@" | /bin/bash &
