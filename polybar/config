@@ -51,7 +51,7 @@ font-2 = siji:pixelsize=10;
 
 modules-left = bspwm
 modules-center = xwindow
-modules-right = xbacklight pulseaudio xkeyboard memory cpu wlan battery temperature date
+modules-right = pomodoro pulseaudio xkeyboard memory cpu wlan battery temperature date
 
 tray-position = right
 tray-padding = 2
@@ -98,27 +98,14 @@ label-empty = %index%
 label-empty-foreground = ${colors.foreground-alt}
 label-empty-padding = 2
 
-[module/xbacklight]
-type = internal/xbacklight
+[module/pomodoro]
+type = custom/script
 
-format = <label> <bar>
-label = BL
+exec = pomodoro_get /home/sam/.pomodoro.info
 
-bar-width = 10
-bar-indicator = |
-bar-indicator-foreground = #fff
-bar-indicator-font = 2
-bar-fill = ─
-bar-fill-font = 2
-bar-fill-foreground = #9f78e1
-bar-empty = ─
-bar-empty-font = 2
-bar-empty-foreground = ${colors.foreground-alt}
+interval = 1
 
-[module/backlight-acpi]
-inherit = module/xbacklight
-type = internal/backlight
-card = intel_backlight
+format-underline = #f90000
 
 [module/cpu]
 type = internal/cpu
