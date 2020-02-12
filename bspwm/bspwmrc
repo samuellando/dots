@@ -4,7 +4,7 @@ sxhkd &
 polybar sam &
 dunst &
 compton --corner-radius 20 &
-background ~/Pictures/backgrounds &
+feh --bg-scale --randomize ~/Pictures/backgrounds
 
 bspc monitor -d 1 2 3 4 5 6 7 8 9 10
 
