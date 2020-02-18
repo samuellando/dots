@@ -101,7 +101,7 @@ label-empty-padding = 2
 [module/pomodoro]
 type = custom/script
 
-exec = pomodoro_get /home/sam/.pomodoro.info
+exec = pomodoro -g
 
 interval = 1
 
