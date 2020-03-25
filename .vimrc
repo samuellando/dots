@@ -52,7 +52,6 @@ map <F5> :set spell spelllang=en_us<CR>
 "---------------------------- PLUGINS ----------------------------------------"
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
-Plug 'lrvick/Conque-Shell'
 call plug#end()
 
 "------------------------------ PLUGINS CONFIG -------------------------------"
