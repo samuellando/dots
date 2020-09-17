@@ -92,13 +92,13 @@ alt + {Left,Down,Up,Right}
 
 # Function keys
 XF86AudioLowerVolume
-       amixer -c 1 sset Master 10%- 
+       amixer sset Master 10%- 
 
 XF86AudioRaiseVolume
-      amixer -c 1 sset Master 10%+
+      amixer sset Master 10%+
 
 XF86AudioMute
-      amixer -c 1 sset Master mute
+      amixer sset Master mute
 
 XF86MonBrightnessDown
       sudo brightnessctl set 10%-
