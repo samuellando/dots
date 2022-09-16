@@ -12,7 +12,12 @@ setopt extendedhistory
 #Startx Automatically
 if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
 	 startx
-	 logout
+ logout
+fi
+
+if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty2 ]]; then
+startx /home/sam/.xinitrc2
+logout
 fi
 
 # If not running interactively, don't do anything
