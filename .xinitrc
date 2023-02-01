@@ -12,11 +12,10 @@ fi
 export AWT_TOOLKIT=MToolkit
 wmname compiz
 
+/home/sam/battery -loop &
 sxhkd &
 udiskie &
 dunst &
 picom &
-
-systemd-run --user --on-active=60 ~/bin/battery
 
 bspwm
