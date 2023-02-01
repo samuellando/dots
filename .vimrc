@@ -26,24 +26,18 @@ set shiftwidth=2
 set softtabstop=2
 set autoindent
 set smartindent
+
+"For moving betweeen splits "
 map <C-l> <C-w>l
 map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
 
 autocmd InsertEnter * silent !echo -ne '\e[5 q'
 autocmd InsertLeave * silent !echo -ne '\e[1 q'
 autocmd VimEnter * silent !echo -ne '\e[1 q'
 
 "---------------------- IDE STUFF --------------------------------------------"
-"Load project hotkeys"
-if filereadable(".vim/hotkeys")
-  so .vim/hotkeys
-endif
-
-"Load project commands"
-if filereadable(".vim/commands")
-  so .vim/commands
-endif
-
 "Format the code"
 map <F7> gg=G<C-o><C-o>
 map <F6> :w !xclip -selection clipboard -i<CR><CR>

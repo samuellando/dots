@@ -33,9 +33,6 @@ pfetch
 # Built in
 alias clear='clear; pfetch'
 
-# Sudo shortcuts.
-alias pacman="sudo pacman"
-
 # Command shortcuts.
 alias trans_start='transmission-daemon -x /tmp/trans_pid --auth --username arch --password linux --port 1024 --allowed "127.0.0.1"; echo "localhost:1024"'
 alias trans_stop='kill $(cat /tmp/trans_pid)'
@@ -104,3 +101,7 @@ echo -ne '\e[5 q'
 
 # Use beam shape cursor for each new prompt.
 preexec() { echo -ne '\e[5 q' ;}
+
+alias gti=git
+
+alias vim=~/.local/bin/lvim
