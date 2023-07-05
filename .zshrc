@@ -104,4 +104,4 @@ preexec() { echo -ne '\e[5 q' ;}
 
 alias gti=git
 
-alias vim=~/.local/bin/lvim
+alias vim=nvim
