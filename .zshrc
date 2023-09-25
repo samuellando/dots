@@ -105,3 +105,4 @@ preexec() { echo -ne '\e[5 q' ;}
 alias gti=git
 
 alias vim=nvim
+export EDITOR=nvim

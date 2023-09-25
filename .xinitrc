@@ -13,7 +13,6 @@ export AWT_TOOLKIT=MToolkit
 wmname compiz
 
 source ~/.env
-/home/sam/bin/battery -loop &
 
 sxhkd &
 udiskie &
