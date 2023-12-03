@@ -2,45 +2,20 @@
 # STARTUP #
 ###########
 # Add user scripts to the PATH.
-export PATH=~/bin:$PATH
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="~/bin:$PATH:/usr/local/bin:$PATH"
 
 HISTFILE=~/.zhistory
 HISTSIZE=SAVEHIST=10000
-setopt sharehistory
-setopt extendedhistory
-
-#Startx Automatically
-if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
-	 startx
- logout
-fi
-
-if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty2 ]]; then
-startx /home/sam/.xinitrc2
-logout
-fi
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 alias ls="ls --color=auto"
-alias pfetch='echo ""; pfetch'
-pfetch
 
 ###########
 # ALIASES #
 ###########
-
 # Built in
-alias clear='clear; pfetch'
-
-# Command shortcuts.
-alias trans_start='transmission-daemon -x /tmp/trans_pid --auth --username arch --password linux --port 1024 --allowed "127.0.0.1"; echo "localhost:1024"'
-alias trans_stop='kill $(cat /tmp/trans_pid)'
-alias red='redshift -O 2500k -P'
-alias blue='redshift -x'
-alias nexus="ssh sam@samuellando.com"
-alias stc="curl -k --data 'fw_username=STC219&fw_password=pehylvirg&fw_domain=Firebox-DB&submit=Login&action=fw_logon&fw_logon_type=logon&redirect=https%3A%2F%2Fstcathys.com%2F&lang=en-US' 'https://10.0.1.1:4100/wgcgi.cgi'"
-alias pingloop="ping www.samuellando.com"         
 
 ###########
 # PROMPTS #
@@ -106,3 +81,4 @@ alias gti=git
 
 alias vim=nvim
 export EDITOR=nvim
+alias cvim="docker run -ti --rm --name nvim --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydev"
