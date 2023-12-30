@@ -1,6 +1,21 @@
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
+-- Split windows -- 
+vim.keymap.set("n", "<leader>vs", ':vsplit<CR>')
+vim.keymap.set("n", "<leader>s", ':split<CR>')
+
+-- Moving between windows --
+vim.keymap.set("n", "<leader>l", '<C-w>l')
+vim.keymap.set("n", "<leader>h", '<C-w>h')
+vim.keymap.set("n", "<leader>j", '<C-w>j')
+vim.keymap.set("n", "<leader>k", '<C-w>k')
+
+-- Spelling --
+vim.keymap.set("n", "<leader>sp", function()
+   vim.opt.spell = not(vim.opt.spell:get())
+end)
+
 -- Moving highlighted lines up and down
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
@@ -15,13 +30,19 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- next greatest remap ever : asbjornHaland
-vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+handle = io.popen('cat /etc/*-release | grep "DISTRIB_ID"')
+distrib = handle:read("*a")
+handle:close()
+if string.find(distrib, "Ubuntu") then 
+    vim.keymap.set({"n", "v"}, "<leader>y", "y:call system('nc -q 0 host.docker.internal 8377', @0)<CR>")
+else
+    vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+end
 vim.keymap.set("n", "<leader>Y", [["+Y]])
-
 vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
 
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>fr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>cp", ":Copilot panel<CR>")

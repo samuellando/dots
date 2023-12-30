@@ -1,21 +1,17 @@
 require("sam")
 
-require('telescope').setup {
-    pickers = {
-      find_files = {
-        follow = true
-      }
-    }
-}
+vim.api.nvim_create_autocmd({"BufEnter"}, {
+  pattern = {"*.feature"},
+  command = "filetype detect",
+})
 
---[====[
+-- Rave language syntax highlighting
 vim.filetype.add({
     extension = {
         rave = "rave"
     }
 })
---]====]
---[====[
+
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.rave = {
     install_info = {
@@ -26,5 +22,3 @@ parser_config.rave = {
         filetype = "rave"
     }
 }
-
---]====]

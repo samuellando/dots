@@ -2,7 +2,9 @@
 # STARTUP #
 ###########
 # Add user scripts to the PATH.
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [[ $OSTYPE == "darwin"* ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 export PATH="~/bin:$PATH:/usr/local/bin:$PATH"
 
 HISTFILE=~/.zhistory
@@ -25,9 +27,17 @@ alias ls="ls --color=auto"
 
 # Custom
 autoload -U colors && colors
-PS1="%B%{$fg[magenta]%}%1~" # Display the directory
+if [[ $OSTYPE == "darwin"* ]]; then
+    PS1="%B%{$fg[blue]%}%1~" # Display the directory
+else
+    PS1="%B%{$fg[magenta]%}%1~" # Display the directory
+fi
 PS1="$PS1%(?.%{$fg[green]%} ^_^.$fg[red]%} O_O) " # Display smiley face if all is good
-PS1="$PS1%{$fg[magenta]%}$%b "   # Display the prompt symbol
+if [[ $OSTYPE == "darwin"* ]]; then
+    PS1="$PS1%{$fg[blue]%}$%b "   # Display the prompt symbol
+else
+    PS1="$PS1%{$fg[magenta]%}$%b "   # Display the prompt symbol
+fi
 
 # Load aliases and shortcuts if existent.
 
@@ -81,4 +91,4 @@ alias gti=git
 
 alias vim=nvim
 export EDITOR=nvim
-alias cvim="docker run -ti --rm --name nvim --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydev"
+alias cvim='docker run -ti  --rm --name nvim --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydevzsh'
