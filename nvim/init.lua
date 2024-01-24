@@ -11,6 +11,19 @@ vim.filetype.add({
         rave = "rave"
     }
 })
+vim.filetype.add {
+  pattern = {
+    ['.*'] = {
+      priority = -math.huge,
+      function(path, bufnr)
+        local content = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ''
+        if vim.regex("crc"):match_str(content) ~= nil then
+          return 'rave'
+        end
+      end,
+    },
+  },
+}
 
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.rave = {

@@ -28,7 +28,7 @@ function getVisualSelection()
 	vim.fn.setreg('v', {})
 
 	text = string.gsub(text, "\n", "")
-	if #text > 0 then
+	if text > 0 then
 		return text
 	else
 		return ''
@@ -36,7 +36,10 @@ function getVisualSelection()
 end
 
 local telescope_stack = {}
-function telescope_resume(func, id, force)
+-- Make a telescope window resumable
+function telescope_make_resumeable(id, func, args)
+    args = args or {}
+    -- Helper function, get the index of value in array
     function indexOf(array, value)
         for i, v in ipairs(array) do
             if v == value then
@@ -47,46 +50,32 @@ function telescope_resume(func, id, force)
     end
 
     return function()
+        -- Check if it's been used.
         local i = indexOf(telescope_stack, id)
         if i >= 0 then
+            -- Shift it the the top of the stack.
             table.remove(telescope_stack, i)
             table.insert(telescope_stack, 1, id)
-            if not force then
+            if vim.fn.mode() == "n" then
                 builtin.resume({cache_index=i})
                 return
             end
         else
             table.insert(telescope_stack, 1, id)
         end
-        func()
+        -- Call the supplied function.
+        if vim.fn.mode() ~= "n" then
+            args["default_text"] = getVisualSelection()
+        end
+        func(args)
     end
 end
 
-function telescope_register(key,func)
-    vim.keymap.set('n', '<leader>'..key, telescope_resume(func, key))
-    vim.keymap.set('v', '<leader>'..key, telescope_resume(function() 
-        func({ default_text = getVisualSelection() })
-    end, key, true))
-end
-
-vim.keymap.set('n', '<C-p>', builtin.git_files, {})
-
-telescope_register("pf", builtin.find_files)
-telescope_register("pl", builtin.live_grep)
-
---- Jeppesen: Live grep but only for core ---
-function telescope_sys(args)
-    local t = {search_dirs={"./sys"}}
-    for k,v in pairs(args) do t[k] = v end
-    t.default_text = t.default_text:gsub("\\d%+", ".*")
-    builtin.live_grep(t)
-end
-
---- Jeppesen: Search core behave steps with a fuzzy finder ---
-function fuzzy_core_test(args)
-    args = args or {default_text = ""}
+-- Fuzzy find on file contents
+function fuzzy_contents(args)
+    args = args or {}
+    args["default_text"] = args["default_text"] or ""
     local t = {
-        search_dirs={"./sys/lib/python/behavesteps"}, 
         search="",
         only_sort_text=true,
         word_match="-w",
@@ -98,20 +87,85 @@ function fuzzy_core_test(args)
     builtin.grep_string(t)
 end
 
-function fuzzy_test(args)
-    args = args or {}
-    local t = {
-        search_dirs={"./usr/behave/features"}, 
-        search="",
-        only_sort_text=true,
-        word_match="-w",
-        shorten_path = true
-    }
-    for k,v in pairs(args) do t[k] = v end
-    builtin.grep_string(t)
+-- Format: <leader> VERB NOUN --
+--
+-- verbs:
+--      pl : live grep
+--      pf : fuzzy seach file names 
+--      ff : fuzzy find file contents
+--
+
+local verbs = {
+    pl      = {desc="grep", func=builtin.live_grep},
+    pf      = {desc="fuzzy titles", func=builtin.find_files},
+    ff      = {desc="fuzzy contents", func=fuzzy_contents},
+}
+
+local nouns = {
+    {key="ju", desc="config", path="./usr"},
+    {key="js", desc="core", path="./sys"},
+    {key="jut", desc="tests", path="./usr/behave/features"},
+    {key="juts", desc="config behave steps", path="./usr/behave/steps"},
+    {key="jsts", desc="core behave steps", path="./sys/lib/python/behavesteps"}
+}
+
+local Menu = require("nui.menu")
+local event = require("nui.utils.autocmd").event
+
+local popup_options = {
+  position = "50%",
+  size = {
+    width = 50,
+    height = 10,
+  },
+  border = {
+    style = "rounded",
+    text = {
+      top = "[Where?]",
+      top_align = "center",
+    },
+  },
+  win_options = {
+    winhighlight = "Normal:Normal",
+  }
+}
+
+local menu_lines = {}
+for i, d in ipairs(nouns) do
+    table.insert(menu_lines, Menu.item(d.desc, {key=d.key, path=d.path}))
 end
 
---- Jeppesen specific commands ----
-telescope_register("ps", telescope_sys)
-telescope_register("fs", fuzzy_core_test)
-telescope_register("ft", fuzzy_test)
+local selected_verb = ""
+
+local menu = Menu(popup_options, {
+  lines = menu_lines,
+  max_width = 50,
+  keymap = {
+    focus_next = { "j", "<Down>", "<Tab>" },
+    focus_prev = { "k", "<Up>", "<S-Tab>" },
+    close = { "<Esc>", "<C-c>" },
+    submit = { "<CR>", "<Space>" },
+  },
+  on_submit = function(item)
+    local verb = selected_verb
+    local d = verbs[verb]
+
+    local args = {prompt_title=d.desc.." "..item.text, search_dirs={item.path}} 
+    telescope_make_resumeable(verb..item.key, d.func, args)()
+  end,
+})
+
+for verb, d in pairs(verbs) do
+    -- Register the default path
+    vim.keymap.set({'n', 'v'}, '<leader>'..verb, telescope_make_resumeable(
+      verb, 
+      d.func,
+      {prompt_title=d.desc}
+    ))
+    -- Register menu for paths
+    vim.keymap.set({'n', 'v'}, '<leader>x'..verb, function()
+        selected_verb = verb
+        menu:mount()
+    end)
+end
+

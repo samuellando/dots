@@ -14,10 +14,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    {
-        'nvim-telescope/telescope.nvim',
-        dependencies = {'nvim-lua/plenary.nvim'}
-    },
+    -- My theme
     {
         'rose-pine/neovim', 
         name = 'rose-pine',
@@ -25,6 +22,21 @@ require("lazy").setup({
             vim.cmd('colorscheme rose-pine')
         end
     },
+	'nvim-lua/plenary.nvim', -- Better lua programming
+	'ThePrimeagen/harpoon',  -- YOU KNOW
+	'mbbill/undotree', -- See my undoos
+    'kevinhwang91/nvim-bqf', -- a slightly better but still bad quick fix list
+    "lewis6991/gitsigns.nvim", -- add git difs in side bar
+    "lukas-reineke/indent-blankline.nvim", -- shows indent guides
+    'windwp/nvim-autopairs', -- auto add pairs
+    "ggandor/leap.nvim", -- for leaping around, with s and S as the additional motion.
+    "godlygeek/tabular", -- For fixing my gherkin tables
+    "sindrets/diffview.nvim", -- For easy git diffs
+    "tpope/vim-repeat", -- Allows repeats for plugin keybindings
+    "tpope/vim-surround", -- Surronding stuff easy
+    "numToStr/Comment.nvim", -- Commenting stuff easy
+    'MunifTanjim/nui.nvim', -- For some menus
+    -- Tree sitter stuff
     {
         "nvim-treesitter/nvim-treesitter",
         build = function()
@@ -32,20 +44,11 @@ require("lazy").setup({
         end,
     },
 	'nvim-treesitter/playground',
-	'nvim-lua/plenary.nvim',
-	'ThePrimeagen/harpoon',
-	'mbbill/undotree',
-	'tpope/vim-fugitive',
-    'kevinhwang91/nvim-bqf',
-    "lewis6991/gitsigns.nvim",
-    "lukas-reineke/indent-blankline.nvim",
-    'windwp/nvim-autopairs',
-    "ggandor/leap.nvim",
-    "godlygeek/tabular",
-    "sindrets/diffview.nvim",
-    "tpope/vim-repeat",
-    "tpope/vim-surround",
-    "numToStr/Comment.nvim",
+    -- Telescope stuff
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = {'nvim-lua/plenary.nvim'}
+    },
     {
         'junegunn/fzf', 
         build = function()
