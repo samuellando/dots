@@ -30,13 +30,16 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- next greatest remap ever : asbjornHaland
-handle = io.popen('cat /etc/*-release | grep "DISTRIB_ID"')
-distrib = handle:read("*a")
-handle:close()
-if string.find(distrib, "Ubuntu") then 
-    vim.keymap.set({"n", "v"}, "<leader>y", "y:call system('nc -q 0 host.docker.internal 8377', @0)<CR>")
-else
-    vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+local handle = io.popen('cat /etc/*-release | grep "DISTRIB_ID"')
+if handle ~= nil then
+    local distrib = handle:read("*a")
+
+    handle:close()
+    if string.find(distrib, "Ubuntu") then
+        vim.keymap.set({"n", "v"}, "<leader>y", "y:call system('nc -q 0 host.docker.internal 8377', @0)<CR>")
+    else
+        vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+    end
 end
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])

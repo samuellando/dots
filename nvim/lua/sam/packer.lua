@@ -34,6 +34,7 @@ require("lazy").setup({
     "sindrets/diffview.nvim", -- For easy git diffs
     "tpope/vim-repeat", -- Allows repeats for plugin keybindings
     "tpope/vim-surround", -- Surronding stuff easy
+    "tpope/vim-fugitive", -- git wrapper
     "numToStr/Comment.nvim", -- Commenting stuff easy
     'MunifTanjim/nui.nvim', -- For some menus
     -- Tree sitter stuff
