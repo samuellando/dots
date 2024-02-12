@@ -28,7 +28,7 @@ function getVisualSelection()
 	vim.fn.setreg('v', {})
 
 	text = string.gsub(text, "\n", "")
-	if text > 0 then
+	if string.len(text) > 0 then
 		return text
 	else
 		return ''
@@ -136,6 +136,7 @@ for i, d in ipairs(nouns) do
 end
 
 local selected_verb = ""
+local was_visual = false
 
 local menu = Menu(popup_options, {
   lines = menu_lines,
@@ -151,6 +152,9 @@ local menu = Menu(popup_options, {
     local d = verbs[verb]
 
     local args = {prompt_title=d.desc.." "..item.text, search_dirs={item.path}} 
+    if was_visual then
+        vim.cmd("normal gv")
+    end
     telescope_make_resumeable(verb..item.key, d.func, args)()
   end,
 })
@@ -165,7 +169,13 @@ for verb, d in pairs(verbs) do
     -- Register menu for paths
     vim.keymap.set({'n', 'v'}, '<leader>x'..verb, function()
         selected_verb = verb
+        if vim.fn.mode() == "V" or vim.fn.mode() == "v" then
+            was_visual = true
+        else
+            was_visual = false
+        end
         menu:mount()
+
     end)
 end
 

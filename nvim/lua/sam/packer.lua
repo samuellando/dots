@@ -25,7 +25,7 @@ require("lazy").setup({
 	'nvim-lua/plenary.nvim', -- Better lua programming
 	'ThePrimeagen/harpoon',  -- YOU KNOW
 	'mbbill/undotree', -- See my undoos
-    'kevinhwang91/nvim-bqf', -- a slightly better but still bad quick fix list
+    'stefandtw/quickfix-reflector.vim',
     "lewis6991/gitsigns.nvim", -- add git difs in side bar
     "lukas-reineke/indent-blankline.nvim", -- shows indent guides
     'windwp/nvim-autopairs', -- auto add pairs

@@ -92,3 +92,4 @@ alias gti=git
 alias vim=nvim
 export EDITOR=nvim
 alias cvim='docker run -ti  --rm --name nvim --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydevzsh'
+alias tmux='tmux -u'
