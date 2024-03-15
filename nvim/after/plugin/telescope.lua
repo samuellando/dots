@@ -35,9 +35,10 @@ function getVisualSelection()
     end
 end
 
-local telescope_stack = {}
+local telescope_stack = nil
 -- Make a telescope window resumable
 function telescope_resumeable(id, func, args)
+    telescope_stack = {}
     args = args or {}
     -- Helper function, get the index of value in array
     function indexOf(array, value)
@@ -72,6 +73,12 @@ function telescope_resumeable(id, func, args)
     end
 end
 
+function resume_last()
+    if telescope_stack then
+        builtin.resume()
+    end
+end
+
 -- Fuzzy find on file contents
 function fuzzy_contents(args)
     args = args or {}
@@ -101,6 +108,8 @@ local verbs = {
     pf = { desc = "fuzzy titles", func = builtin.find_files },
     ff = { desc = "fuzzy contents", func = fuzzy_contents },
 }
+
+vim.keymap.set({ 'n', 'v' }, '<leader>pr', resume_last)
 
 local Menu = require("nui.menu")
 
