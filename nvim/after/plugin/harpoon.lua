@@ -16,7 +16,7 @@ require("harpoon").setup({
         excluded_filetypes = { "harpoon" },
 
         -- set marks specific to each git branch inside git repository
-        mark_branch = false,
+        mark_branch = true,
 
         -- enable tabline with harpoon marks
         tabline = false,
