@@ -35,10 +35,9 @@ function getVisualSelection()
     end
 end
 
-local telescope_stack = nil
+local telescope_stack = {}
 -- Make a telescope window resumable
 function telescope_resumeable(id, func, args)
-    telescope_stack = {}
     args = args or {}
     -- Helper function, get the index of value in array
     function indexOf(array, value)
