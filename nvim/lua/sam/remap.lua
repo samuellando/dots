@@ -1,5 +1,4 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 -- Split windows -- 
 vim.keymap.set("n", "<leader>vs", ':vsplit<CR>')
