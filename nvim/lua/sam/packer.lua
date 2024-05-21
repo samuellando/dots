@@ -2,40 +2,39 @@
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    -- My theme
+    'nvim-lua/plenary.nvim', -- Better lua programming
+    'samuellando/harpoon',   -- YOU KNOW
+    'mbbill/undotree',       -- See my undoos
+    -- File manager
     {
-        'rose-pine/neovim', 
-        name = 'rose-pine',
-        config = function()
-            vim.cmd('colorscheme rose-pine')
-        end
+        'stevearc/oil.nvim',
+        dependencies = { "nvim-tree/nvim-web-devicons" }
     },
-	'nvim-lua/plenary.nvim', -- Better lua programming
-	'ThePrimeagen/harpoon',  -- YOU KNOW
-	'mbbill/undotree', -- See my undoos
-    'kevinhwang91/nvim-bqf', -- a slightly better but still bad quick fix list
-    "lewis6991/gitsigns.nvim", -- add git difs in side bar
+    'stefandtw/quickfix-reflector.vim',    -- Quick fix list editing.
+    -- 'kevinhwang91/nvim-bqf',            -- A nice quickfix list plugin, with preview window. Conficts with previous
+    "lewis6991/gitsigns.nvim",             -- add git difs in side bar
     "lukas-reineke/indent-blankline.nvim", -- shows indent guides
-    'windwp/nvim-autopairs', -- auto add pairs
-    "ggandor/leap.nvim", -- for leaping around, with s and S as the additional motion.
-    "godlygeek/tabular", -- For fixing my gherkin tables
-    "sindrets/diffview.nvim", -- For easy git diffs
-    "tpope/vim-repeat", -- Allows repeats for plugin keybindings
-    "tpope/vim-surround", -- Surronding stuff easy
-    "numToStr/Comment.nvim", -- Commenting stuff easy
-    'MunifTanjim/nui.nvim', -- For some menus
+    'windwp/nvim-autopairs',               -- auto add pairs
+    "ggandor/leap.nvim",                   -- for leaping around, with s and S as the additional motion.
+    "godlygeek/tabular",                   -- For fixing my gherkin tables
+    "sindrets/diffview.nvim",              -- For easy git diffs
+    "tpope/vim-repeat",                    -- Allows repeats for plugin keybindings
+    "tpope/vim-surround",                  -- Surronding stuff easy
+    "tpope/vim-fugitive",                  -- git wrapper
+    "numToStr/Comment.nvim",               -- Commenting stuff easy
+    'MunifTanjim/nui.nvim',                -- For some menus
     -- Tree sitter stuff
     {
         "nvim-treesitter/nvim-treesitter",
@@ -43,24 +42,36 @@ require("lazy").setup({
             require("nvim-treesitter.install").update({ with_sync = true })()
         end,
     },
-	'nvim-treesitter/playground',
+    'nvim-treesitter/playground',
     -- Telescope stuff
     {
         'nvim-telescope/telescope.nvim',
-        dependencies = {'nvim-lua/plenary.nvim'}
+        dependencies = { 'nvim-lua/plenary.nvim' }
     },
     {
-        'junegunn/fzf', 
+        'junegunn/fzf',
         build = function()
             vim.fn['fzf#install']()
         end
     },
+    -- My theme
+    {
+        'rose-pine/neovim',
+        name = 'rose-pine',
+        config = function()
+            require("rose-pine").setup({
+                variant = "main"
+            });
+            vim.cmd('colorscheme rose-pine')
+        end
+    },
     -- LSP ZERO
-    {'williamboman/mason.nvim'},
-    {'williamboman/mason-lspconfig.nvim'},
-    {'VonHeikemen/lsp-zero.nvim', branch = 'v3.x'},
-    {'neovim/nvim-lspconfig'},
-    {'hrsh7th/cmp-nvim-lsp'},
-    {'hrsh7th/nvim-cmp'},
-    {'L3MON4D3/LuaSnip'},
+    { 'williamboman/mason.nvim' },
+    { 'williamboman/mason-lspconfig.nvim' },
+    { 'mhartington/formatter.nvim' },
+    { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
+    { 'neovim/nvim-lspconfig' },
+    { 'hrsh7th/cmp-nvim-lsp' },
+    { 'hrsh7th/nvim-cmp' },
+    { 'L3MON4D3/LuaSnip' },
 })

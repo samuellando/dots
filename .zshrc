@@ -5,7 +5,11 @@
 if [[ $OSTYPE == "darwin"* ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
-export PATH="~/bin:$PATH:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/bin:$PATH"
+
+export LC_ALL=en_IN.UTF-8
+export LC_CTYPE=en_IN.UTF-8
+export LANG=en_IN.UTF-8
 
 HISTFILE=~/.zhistory
 HISTSIZE=SAVEHIST=10000
@@ -91,4 +95,5 @@ alias gti=git
 
 alias vim=nvim
 export EDITOR=nvim
-alias cvim='docker run -ti  --rm --name nvim --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydevzsh'
+alias cvim='docker run -ti  --rm --name nvim --mount source=jeppesen-migration-work,target=/migration-work --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydevzsh'
+alias tmux='tmux -u'
