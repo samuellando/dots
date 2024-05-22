@@ -4,6 +4,10 @@
 # Add user scripts to the PATH.
 if [[ $OSTYPE == "darwin"* ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+  if [[ "$(tty)" == "/dev/tty1" ]]; then
+    Hyprland
+  fi
 fi
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
@@ -39,16 +43,31 @@ if [[ $OSTYPE == "darwin"* ]]; then
 else
     basecolor="%b%{$fg[magenta]%}"
 fi
-
 passcolor="%{$fg[green]%}"
 failcolor="%{$fg[red]%}"
+gitcolor="%{$fg[blue]%}"
 
 directory="$basecolor%1~"
 result="%(?.$passcolor ^_^.$failcolor O_O)"
-git=$(git branch)
-prmpt="$basecolor$%b"
+prmpt="$basecolor$"
 
-PS1=" $directory$result $prmpt "
+gitinfo() {
+    branch=$(git symbolic-ref HEAD 2> /dev/null | cut -c 12-)
+    if [ "$branch" = "" ]; then
+        return ""
+    else
+        ahead=$(git rev-list --left-right origin/master..HEAD | grep "^>" | wc -l)
+        behind=$(git rev-list --left-right origin/master..HEAD | grep "^<" | wc -l)
+        echo " $gitcolor($branch $ahead/$behind)"
+    fi
+}
+
+PROMPT=" %B$directory\$(gitinfo)$result $prmpt%b "
+function preexec() {
+  DATE=`date +"%H:%M:%S"`
+  C=$(($COLUMNS-10))
+  echo -e "\033[1A\033[${C}C ${DATE} "
+}
 
 # Load aliases and shortcuts if existent.
 
@@ -91,12 +110,6 @@ zle-line-init() {
 }
 
 zle -N zle-line-init
-
-# Use beam shape cursor on startup.
-echo -ne '\e[5 q'
-
-# Use beam shape cursor for each new prompt.
-preexec() { echo -ne '\e[5 q' ;}
 
 alias gti=git
 
