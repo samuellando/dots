@@ -56,8 +56,8 @@ gitinfo() {
     if [ "$branch" = "" ]; then
         return ""
     else
-        ahead=$(git rev-list --left-right origin/master..HEAD | grep "^>" | wc -l)
-        behind=$(git rev-list --left-right origin/master..HEAD | grep "^<" | wc -l)
+        ahead=$(git rev-list --left-right origin/$branch..HEAD | grep "^>" | wc -l)
+        behind=$(git rev-list --left-right origin/$branch..HEAD | grep "^<" | wc -l)
         echo " $gitcolor($branch $ahead/$behind)"
     fi
 }

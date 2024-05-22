@@ -1,0 +1,56 @@
+#!/bin/python3
+
+import argparse
+import subprocess
+from pathlib import Path
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-k', '--kill')
+parser.add_argument('-i', '--interactive', action='store_true')
+args = parser.parse_args()
+
+if args.kill is not None:
+    subprocess.run(['tmux', 'kill-session', '-t', args.kill.replace(" *", "")])
+
+active_sessions = subprocess.run(['tmux', 'list-sessions', '-F', '#S'], stdout=subprocess.PIPE).stdout.decode('utf-8').split('\n')[:-1]
+active_sessions = subprocess.run(['tmux', 'list-sessions', '-F', '#S'], stdout=subprocess.PIPE).stdout.decode('utf-8').split('\n')[:-1]
+
+project_sessions = []
+project_dirs = []
+with open(str(Path.home()) + '/.tmixer-projects.json', 'r') as f:
+    projects = json.load(f)
+for name, dir in projects.items():
+    if name not in active_sessions:
+        project_sessions.append(name)
+        project_dirs.append(dir)
+
+for i, s in enumerate(active_sessions):
+    active_sessions[i] = s + " *"
+
+if not args.interactive:
+    for name in (project_sessions + active_sessions):
+        print(name)
+    exit()
+
+fzf_command = [
+    "fzf",
+    "--multi",
+    "--bind",
+    "ctrl-d:execute(tmixer -k {})+reload(tmixer)"
+]
+
+res = subprocess.run(fzf_command, input="\n".join(project_sessions + active_sessions).encode(), stdout=subprocess.PIPE)
+if res.returncode != 0:
+    exit()
+
+name = res.stdout.decode("utf-8").split("\n")[0]
+
+if name in active_sessions:
+    name = name.replace(" *", "")
+    subprocess.run(['tmux', 'switch', '-t', name])
+else:
+    subprocess.run(['tmux', 'new', '-s', name, '-d'])
+    subprocess.run(['tmux', 'switch', '-t', name])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:0", f"cd {projects[name]}", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:0", 'vim .', 'enter'])
