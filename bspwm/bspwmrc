@@ -6,12 +6,9 @@ xsetroot -cursor_name left_ptr &
 killall polybar
 
 if [[ ! -z $( xrandr --listactivemonitors | grep "DP-3") ]]; then
-  bspc monitor DP-3 -d 1 2 3 4 5 6 7 8 9
-  bspc monitor DP-1 -d 0
+  bspc monitor DP-3 -d 1 2 3 4 5 6 7 8 9 0
   bspc monitor DP-3 -g 1920x1080+0+0
-  bspc monitor DP-1 -g 1920x1080+1920+0
   bspc desktop 1 -f
-  polybar dp1 &
   polybar dp3 &
 else
   bspc monitor eDP-1 -d 1 2 3 4 5 6 7 8 9 0

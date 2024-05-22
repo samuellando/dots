@@ -7,16 +7,17 @@ if [[ $OSTYPE == "darwin"* ]]; then
 fi
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
-export LC_ALL=en_IN.UTF-8
-export LC_CTYPE=en_IN.UTF-8
-export LANG=en_IN.UTF-8
-
 HISTFILE=~/.zhistory
 HISTSIZE=SAVEHIST=10000
+export EDITOR=nvim
+export VISUAL=nvim
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 alias ls="ls --color=auto"
+alias neofetch="echo""; neofetch"
+alias clear="clear; neofetch"
+neofetch
 
 ###########
 # ALIASES #
@@ -30,18 +31,24 @@ alias ls="ls --color=auto"
 # Default PS1='[\u@\h \W]\$ '
 
 # Custom
+setopt PROMPT_SUBST
 autoload -U colors && colors
+
 if [[ $OSTYPE == "darwin"* ]]; then
-    PS1="%B%{$fg[blue]%}%1~" # Display the directory
+    basecolor="%b%{$fg[blue]%}"
 else
-    PS1="%B%{$fg[magenta]%}%1~" # Display the directory
+    basecolor="%b%{$fg[magenta]%}"
 fi
-PS1="$PS1%(?.%{$fg[green]%} ^_^.$fg[red]%} O_O) " # Display smiley face if all is good
-if [[ $OSTYPE == "darwin"* ]]; then
-    PS1="$PS1%{$fg[blue]%}$%b "   # Display the prompt symbol
-else
-    PS1="$PS1%{$fg[magenta]%}$%b "   # Display the prompt symbol
-fi
+
+passcolor="%{$fg[green]%}"
+failcolor="%{$fg[red]%}"
+
+directory="$basecolor%1~"
+result="%(?.$passcolor ^_^.$failcolor O_O)"
+git=$(git branch)
+prmpt="$basecolor$%b"
+
+PS1=" $directory$result $prmpt "
 
 # Load aliases and shortcuts if existent.
 
@@ -58,7 +65,7 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^?' backward-delete-char
+bindkey -v
 
 export KEYTIMEOUT=1
 
@@ -94,6 +101,5 @@ preexec() { echo -ne '\e[5 q' ;}
 alias gti=git
 
 alias vim=nvim
-export EDITOR=nvim
 alias cvim='docker run -ti  --rm --name nvim --mount source=jeppesen-migration-work,target=/migration-work --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydevzsh'
 alias tmux='tmux -u'

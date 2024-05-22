@@ -56,13 +56,10 @@ require("lazy").setup({
     },
     -- My theme
     {
-        'rose-pine/neovim',
-        name = 'rose-pine',
+        "morhetz/gruvbox",
         config = function()
-            require("rose-pine").setup({
-                variant = "main"
-            });
-            vim.cmd('colorscheme rose-pine')
+            vim.cmd('let g:gruvbox_italic=1')
+            vim.cmd('colorscheme gruvbox')
         end
     },
     -- LSP ZERO
