@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Create a periodic backup.
+
+repoDir="$HOME/Backups"
+
+include="
+Documents
+.password-store
+.ssh
+repos
+Pictures
+Desktop
+"
+
+for i in $include; do
+    echo $i
+    borg create --stats $repoDir::{hostname}--$i-{now:%Y-%m-%d} $HOME/$i
+done
+
+gsutil -m rsync -r ~/Backups gs://samuellando-backups

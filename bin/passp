@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Access the users password vault.
+#
+# Requires: 
+#   - pass
+#   - bemenu 
+#   - notify-send 
+#   - ydotool
+#   - wl-clipboard
+#
+
+
+options=$(find .password-store/ -type f -name \*.gpg | sed 's/\.gpg//; s/.password-store\///')
+
+selection=$(printf "$options" | bemenu -i)
+[ $? -ne 0 ] && exit 1
+
+login=$(echo $selection | awk -F'/' '{print $NF}')
+
+
+k=0
+while getopts ":up" opt; do
+  case $opt in
+    u)
+      k=1
+      printf "%s" $login | wl-copy
+      notify-send "pass" "Username coppied to clipboard"
+      sleep 5
+      printf "" | wl-copy
+      ;;
+    p)
+      k=1
+      pass -c $selection
+      [ $? -ne 0 ] && exit 1
+      notify-send "pass" "Password coppied to clipboard"
+      sleep 5
+      printf "" | wl-copy
+      ;;
+    \?)
+      exit 1
+  esac
+done
+
+if [ $k = 0 ]; then
+  ydotool type $login
+  ydotool key Tab
+  ydotool type $(pass $selection)
+fi

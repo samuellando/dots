@@ -1,0 +1,34 @@
+#!/bin/sh
+
+rootdotspath="/devbox/dots"
+projects="$HOME/Projects"
+dotspath="$projects/dots"
+packagepath="$rootdotspath/packages"
+include="base"
+
+if [[ $(whoami) = "root" ]]; then
+    # Update, and install all packages
+    pacman -Syu --noconfirm
+    for i in $include; do
+        packages=$(cat $packagepath/$i)
+        pacman --noconfirm -S $packages
+    done
+    sudo -u sam $0
+    exit
+fi
+
+
+# copy the dots files to user
+mkdir -p $dotspath
+cp -r $rootdotspath $projects
+
+# Link all the config files
+mkdir -p ~/.config
+cd ~/.config
+for d in $(ls $dotspath/config); do
+    ln -s $dotspath/config/$d $d
+done
+
+# Link bin
+cd ~
+ln -s $dotspath/bin bin

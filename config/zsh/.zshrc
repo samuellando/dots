@@ -5,8 +5,9 @@
 if [[ $OSTYPE == "darwin"* ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 else
-  if [[ "$(tty)" == "/dev/tty1" ]]; then
+  if [[ $(tty) = "/dev/tty1" ]]; then
     Hyprland
+    exit
   fi
 fi
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
@@ -114,5 +115,5 @@ zle -N zle-line-init
 alias gti=git
 
 alias vim=nvim
-alias cvim='docker run -ti  --rm --name nvim --mount source=jeppesen-migration-work,target=/migration-work --mount source=jeppesen-work,target=/work --mount type=bind,source=/Users/samuel.lando/Documents,target=/root/Documents mydevzsh'
+alias devbox='Projects/dots/devbox/run'
 alias tmux='tmux -u'
