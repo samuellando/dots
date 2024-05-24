@@ -1,4 +1,4 @@
-FROM archlinux
+FROM arch4edu/archlinuxarm
 
 ENV TERM=xterm
 ENV USER=sam

@@ -1,0 +1,11 @@
+{
+    "bin": {
+        "dir": "~/bin"
+    },
+    "nvim": {
+        "dir": "~/Projects/dots/config/nvim"
+    },
+    "misc": {
+        "dir": "~/"
+    }
+}

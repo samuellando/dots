@@ -6,17 +6,36 @@ dotspath="$projects/dots"
 packagepath="$rootdotspath/packages"
 include="base"
 
-if [[ $(whoami) = "root" ]]; then
-    # Update, and install all packages
-    pacman -Syu --noconfirm
-    for i in $include; do
-        packages=$(cat $packagepath/$i)
-        pacman --noconfirm -S $packages
-    done
-    sudo -u sam $0
-    exit
+if [ "$1" = "--arm" ]; then
+	arm=1
+	user=$2
+else
+	arm=0
+	user=$1
 fi
 
+
+who=$(whoami)
+if [ "$who" = "root" ]; then
+    # Update, and install all packages
+    if [ $arm = 1 ]; then
+	    apt update
+	    apt -y upgrade
+    else
+	    pacman -Syu --noconfirm
+    fi
+    for i in $include; do
+	if [ $arm = 1 ]; then
+		packages=$(cat $packagepath/$i-arm)
+		apt --yes --force-yes install $packages
+	else
+		packages=$(cat $packagepath/$i)
+		pacman --noconfirm -S $packages
+	fi
+    done
+    sudo -u $user $0
+    exit
+fi
 
 # copy the dots files to user
 mkdir -p $dotspath

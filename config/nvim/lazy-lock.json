@@ -9,7 +9,7 @@
   "gruvbox": { "branch": "master", "commit": "f1ecde848f0cdba877acb0c740320568252cc482" },
   "harpoon": { "branch": "master", "commit": "484d6e6804cf7ca59e0a0401b9f84e477dd826bb" },
   "indent-blankline.nvim": { "branch": "master", "commit": "3d08501caef2329aba5121b753e903904088f7e6" },
-  "lazy.nvim": { "branch": "main", "commit": "d3974346b6cef2116c8e7b08423256a834cb7cbc" },
+  "lazy.nvim": { "branch": "main", "commit": "8f19915175395680808de529e4220da8dafc0759" },
   "leap.nvim": { "branch": "main", "commit": "be68eec21e37415d15cffaabc959b8d3f9466665" },
   "lsp-zero.nvim": { "branch": "v3.x", "commit": "f12d50716e8e59ea9f5cf484eac6968c33a95917" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "c3168b2a6a09722d4567ef4a37364b9b30bf7f20" },
