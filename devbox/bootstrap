@@ -18,20 +18,11 @@ fi
 who=$(whoami)
 if [ "$who" = "root" ]; then
     # Update, and install all packages
-    if [ $arm = 1 ]; then
-	    apt update
-	    apt -y upgrade
-    else
-	    pacman -Syu --noconfirm
-    fi
+    apt update
+    apt -y upgrade
     for i in $include; do
-	if [ $arm = 1 ]; then
-		packages=$(cat $packagepath/$i-arm)
-		apt --yes --force-yes install $packages
-	else
-		packages=$(cat $packagepath/$i)
-		pacman --noconfirm -S $packages
-	fi
+        packages=$(cat $packagepath/$i-arm)
+        apt --yes install $packages
     done
     sudo -u $user $0
     exit

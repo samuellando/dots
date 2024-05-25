@@ -1,7 +1,3 @@
 #!/bin/sh
 
-if [[ $# = 1 ]]; then
-	docker build -f DockerfileARM -t devbox ../../
-else
-	docker build -f Dockerfile -t devbox ../../
-fi
+docker build -f Dockerfile -t devbox ../../
