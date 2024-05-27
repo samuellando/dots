@@ -14,6 +14,15 @@ CONFIG_DIRS = [
 PROJECTS_DIR = str(Path.home()) + '/Projects'
 
 def kill(name): 
+    # Killing the current session will exit, dont do that.
+    current = get_current_session()
+    if name == current:
+        active = get_active_sessions()
+        del active[active.index(name)]
+        if len(active) > 0:
+            switch_to(active[0])
+        else:
+            start("tmp", {"tmp": {"dir": "~"}})
     cmd = [
         'tmux', 
         'kill-session', 
@@ -21,6 +30,15 @@ def kill(name):
         clean_name(name)
     ]
     subprocess.run(cmd)
+
+def switch_to(name):
+    subprocess.run(['tmux', 'switch', '-t', name])
+    
+def start(name, projects):
+    subprocess.run(['tmux', 'new', '-s', name, '-d'])
+    subprocess.run(['tmux', 'switch', '-t', name])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {projects[name]["dir"]}", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", 'vim .', 'enter'])
 
 def clean_name(name):
     return name.replace(" *", "").replace(" +", "")
@@ -62,7 +80,7 @@ def main():
     args = parser.parse_args()
 
     if args.kill is not None:
-        kill(args.kill)
+        kill(clean_name(args.kill))
         exit()
 
     projects = get_config_projects()
@@ -95,14 +113,14 @@ def main():
     if res.returncode != 0:
         exit()
     name = clean_name(res.stdout.decode("utf-8").split("\n")[0])
+    
+    # Reload active sessions in case it was killed.
+    active_sessions = get_active_sessions()
 
     if name in active_sessions:
-        subprocess.run(['tmux', 'switch', '-t', name])
+        switch_to(name)
     else:
-        subprocess.run(['tmux', 'new', '-s', name, '-d'])
-        subprocess.run(['tmux', 'switch', '-t', name])
-        subprocess.run(['tmux', 'send-keys', '-t', f"{name}:0", f"cd {projects[name]["dir"]}", "enter"])
-        subprocess.run(['tmux', 'send-keys', '-t', f"{name}:0", 'vim .', 'enter'])
+        start(name, projects)
 
 
 if __name__ == "__main__":

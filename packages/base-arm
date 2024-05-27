@@ -9,3 +9,5 @@ openssh-server
 curl
 gcc
 fzf
+ripgrep
+tmux-plugin-manager
