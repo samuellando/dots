@@ -1,5 +1,4 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -56,12 +55,14 @@ require("lazy").setup({
     },
     -- My theme
     {
-        "morhetz/gruvbox",
+        "sainnhe/gruvbox-material",
+        lazy = false,
         config = function()
-            vim.cmd('let g:gruvbox_italic=1')
-            vim.cmd('colorscheme gruvbox')
+            vim.g.gruvbox_material_enable_italic = true
+            vim.cmd.colorscheme('gruvbox-material')
         end
     },
+    'nvim-lualine/lualine.nvim',
     -- LSP ZERO
     { 'williamboman/mason.nvim' },
     { 'williamboman/mason-lspconfig.nvim' },

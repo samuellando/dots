@@ -71,7 +71,7 @@ def main():
     current_session = get_current_session()
 
     project_names = list(projects.keys())
-    names = list(set(project_names + active_sessions))
+    names = sorted(list(set(project_names + active_sessions)))
 
     for i, s in enumerate(names):
         if s in active_sessions:
@@ -87,6 +87,7 @@ def main():
     fzf_command = [
         "fzf",
         "--multi",
+        "--tiebreak=index",
         "--bind",
         "ctrl-x:execute(tmixer -k {})+reload(tmixer)"
     ]
