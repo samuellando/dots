@@ -37,7 +37,7 @@ def switch_to(name):
 def start(name, projects):
     subprocess.run(['tmux', 'new', '-s', name, '-d'])
     subprocess.run(['tmux', 'switch', '-t', name])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {projects[name]["dir"]}", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {projects[name]['dir']}", "enter"])
     subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", 'vim .', 'enter'])
 
 def clean_name(name):
