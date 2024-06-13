@@ -72,4 +72,31 @@ require("lazy").setup({
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
     { 'L3MON4D3/LuaSnip' },
+    -- NEORG
+    {
+        "vhyrro/luarocks.nvim",
+        priority = 1000,
+        config = true,
+    },
+    {
+        "nvim-neorg/neorg",
+        dependencies = { "luarocks.nvim" },
+        version = "*",
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {},
+                    ["core.concealer"] = {},
+                    ["core.dirman"] = {
+                        config = {
+                            workspaces = {
+                                notes = "~/Documents/brain",
+                            },
+                            default_workspace = "notes",
+                        },
+                    },
+                },
+            }
+        end,
+    }
 })
