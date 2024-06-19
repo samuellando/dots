@@ -14,8 +14,14 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     'nvim-lua/plenary.nvim', -- Better lua programming
-    'samuellando/harpoon',   -- YOU KNOW
-    'mbbill/undotree',       -- See my undoos
+    -- YOU KNOW
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" }
+    },
+    'samuellando/tmux-commander',
+    'mbbill/undotree', -- See my undoos
     -- File manager
     {
         'stevearc/oil.nvim',
@@ -86,6 +92,12 @@ require("lazy").setup({
             require("neorg").setup {
                 load = {
                     ["core.defaults"] = {},
+                    ["core.journal"] = {
+                        config = {
+                            strategy = "flat",
+                            workspace = "notes"
+                        }
+                    },
                     ["core.concealer"] = {},
                     ["core.dirman"] = {
                         config = {
