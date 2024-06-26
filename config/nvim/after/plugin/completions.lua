@@ -7,14 +7,15 @@ cmp.setup({
     experimental = {
         ghost_text = true
     },
-    sources = {
+    sources = cmp.config.sources({
         { name = 'nvim_lsp' },
+        { name = 'nvim_lua' },
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'cmdline' },
         { name = 'neorg' },
-    },
+    }),
 
     snippet = {
         expand = function(args)
