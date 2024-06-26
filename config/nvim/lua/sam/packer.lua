@@ -75,8 +75,6 @@ require("lazy").setup({
     { 'mhartington/formatter.nvim' },
     { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
-    { 'hrsh7th/cmp-nvim-lsp' },
-    { 'hrsh7th/nvim-cmp' },
     { 'L3MON4D3/LuaSnip' },
     -- NEORG
     {
@@ -106,6 +104,12 @@ require("lazy").setup({
                             },
                             default_workspace = "notes",
                         },
+                    },
+                    ["core.integrations.nvim-cmp"] = {},
+                    ["core.completion"] = {
+                        config = {
+                            engine = "nvim-cmp"
+                        }
                     },
                 },
             }
