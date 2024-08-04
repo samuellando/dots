@@ -1,4 +1,8 @@
 {
+    "projects": {
+        "dir": "/home/sam/Projects",
+        "subdirs": true
+    },
     "bin": {
         "dir": "~/bin"
     },
@@ -7,5 +11,8 @@
     },
     "misc": {
         "dir": "~/"
+    },
+    "brain": {
+        "dir": "~/Documents/brain"
     }
 }
