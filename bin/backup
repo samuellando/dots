@@ -18,4 +18,4 @@ for i in $include; do
     borg create --stats $repoDir::{hostname}--$i-{now:%Y-%m-%d} $HOME/$i
 done
 
-gsutil -m rsync -r ~/Backups gs://samuellando-backups
+/opt/google-cloud-cli/bin/gsutil -m rsync -r ~/Backups gs://samuellando-backups
