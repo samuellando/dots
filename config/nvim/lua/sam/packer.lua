@@ -16,9 +16,10 @@ require("lazy").setup({
     'nvim-lua/plenary.nvim', -- Better lua programming
     -- YOU KNOW
     {
-        "ThePrimeagen/harpoon",
+        "rusnasonov/harpoon",
         branch = "harpoon2",
-        dependencies = { "nvim-lua/plenary.nvim" }
+        commit = "bfd6493", -- fixes key issue
+        dependencies = { "nvim-lua/plenary.nvim" },
     },
     'samuellando/tmux-commander',
     'mbbill/undotree', -- See my undoos

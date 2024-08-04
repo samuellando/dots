@@ -4,13 +4,13 @@ harpoon:setup({
     settings = {
         save_on_toggle = true,
         sync_on_ui_close = true,
-        -- key = function()
-        --     return string.gsub(
-        --         vim.loop.cwd() .. "/" .. vim.fn.system("git branch --show-current"),
-        --         "\n",
-        --         ""
-        --     )
-        -- end,
+        key = function()
+            return string.gsub(
+                vim.loop.cwd() .. "/" .. vim.fn.system("git branch --show-current"),
+                "\n",
+                ""
+            )
+        end,
     }
 })
 
