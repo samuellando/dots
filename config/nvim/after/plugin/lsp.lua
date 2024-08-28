@@ -25,12 +25,15 @@ require('mason-lspconfig').setup({
         pylsp = function()
             local py_opts = {
                 settings = {
+                    autopep8 = {
+                        enabled = false
+                    },
                     pylsp = {
                         plugins = {
                             pycodestyle = {
                                 enabled = true,
                                 ignore = { 'E501', 'E231' },
-                                maxLineLength = 120
+                                maxLineLength = 240
                             }
                         }
                     }
