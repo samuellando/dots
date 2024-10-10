@@ -48,13 +48,17 @@ def switch_to(name, projects=None):
         start(name, projects)
 
     if projects is not None and name in projects:
-        if 'commands' in projects[name]:
-            for command in projects[name]['commands']:
+        if 'switch_commands' in projects[name]:
+            for command in projects[name]['switch_commands']:
                 send_annon_command(name, projects[name]['dir'], command)
 
 
-def send_command(name, command):
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", command, "enter"])
+def create_window(name, window_name):
+    subprocess.run(["tmux", "new-window", "-t", f"{name}:", "-d", "-n", f"{window_name}"])
+
+
+def send_command(name, command, window="1"):
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:{window}", command, "enter"])
 
 
 def send_annon_command(name, dir, command):
@@ -70,6 +74,14 @@ def start(name, projects=None):
     if projects is not None:
         send_command(name, f"cd {projects[name]['dir']}")
         send_command(name, "vim .")
+
+    if projects is not None and name in projects:
+        if 'startup_windows' in projects[name]:
+            for window in projects[name]['startup_windows']:
+                create_window(name, window["name"])
+                if "command" in window:
+                    send_command(name, f"cd {projects[name]["dir"]}", window["name"])
+                    send_command(name, window["command"], window["name"])
 
     switch_to(name)
 
