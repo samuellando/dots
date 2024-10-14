@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 import json
 import os
+import uuid
 
 CONFIG_DIRS = [
     str(Path.home()) + '/.tmixer-projects.json',
@@ -33,15 +34,56 @@ def kill(name):
     subprocess.run(cmd)
 
 
-def switch_to(name):
-    subprocess.run(['tmux', 'switch', '-t', name])
+def reset(name):
+    temp_session = str(uuid.uuid4())
+    start(temp_session)
+    send_command(temp_session, f"tmixer -k {name}; tmixer -s {name}; tmux kill-session -t {temp_session}")
 
 
-def start(name, projects):
+def switch_to(name, projects=None):
+    active_sessions = get_active_sessions()
+    if name in active_sessions:
+        subprocess.run(['tmux', 'switch', '-t', name])
+    else:
+        start(name, projects)
+
+    if projects is not None and name in projects:
+        if 'switch_commands' in projects[name]:
+            for command in projects[name]['switch_commands']:
+                send_annon_command(name, projects[name]['dir'], command)
+
+
+def create_window(name, window_name):
+    subprocess.run(["tmux", "new-window", "-t", f"{name}:", "-d", "-n", f"{window_name}"])
+
+
+def send_command(name, command, window="1"):
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:{window}", command, "enter"])
+
+
+def send_annon_command(name, dir, command):
+    subprocess.run(['tmux', 'split-window', '-t', f"{name}:1."])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {dir}", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", command, "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", "exit", "enter"])
+
+
+def start(name, projects=None):
     subprocess.run(['tmux', 'new', '-s', name, '-d'])
-    subprocess.run(['tmux', 'switch', '-t', name])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {projects[name]['dir']}", "enter"])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", 'vim .', 'enter'])
+
+    if projects is not None:
+        send_command(name, f"cd {projects[name]['dir']}")
+        send_command(name, "vim .")
+
+    if projects is not None and name in projects:
+        if 'startup_windows' in projects[name]:
+            for window in projects[name]['startup_windows']:
+                create_window(name, window["name"])
+                if "command" in window:
+                    send_command(name, f"cd {projects[name]["dir"]}", window["name"])
+                    send_command(name, window["command"], window["name"])
+
+    switch_to(name)
 
 
 def clean_name(name):
@@ -67,7 +109,9 @@ def expand_subdirs(p):
     for name, data in p.items():
         if data.get("subdirs", False):
             for d in os.listdir(data["dir"]):
-                projects[f"{name}-{d}"] = {"dir": f"{data["dir"]}/{d}"}
+                project = data.copy()
+                project['dir'] = data['dir'] + f"/{d}"
+                projects[f"{name}-{d}"] = project
         else:
             projects[name] = data
     return projects
@@ -88,18 +132,29 @@ def get_active_sessions():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-k', '--kill')
+    parser.add_argument('-s', '--switch')
+    parser.add_argument('-r', '--reset', action='store_true')
     parser.add_argument('-i', '--interactive', action='store_true')
     args = parser.parse_args()
-
-    if args.kill is not None:
-        kill(clean_name(args.kill))
-        exit()
 
     projects = get_config_projects()
     active_sessions = get_active_sessions()
     current_session = get_current_session()
 
+    if args.kill is not None:
+        kill(clean_name(args.kill))
+        exit()
+
+    if args.reset:
+        reset(get_current_session())
+        exit()
+
+    if args.switch:
+        switch_to(args.switch, projects)
+        exit()
+
     project_names = list(projects.keys())
+    # All unique names
     names = sorted(list(set(project_names + active_sessions)))
 
     for i, s in enumerate(names):
@@ -118,7 +173,9 @@ def main():
         "--multi",
         "--tiebreak=index",
         "--bind",
-        "ctrl-x:execute(tmixer -k {})+reload(tmixer)"
+        "ctrl-x:execute(tmixer -k {})+reload(tmixer)",
+        "--bind",
+        "ctrl-r:execute(tmixer -r)+close"
     ]
     res = subprocess.run(fzf_command, input="\n".join(names).encode(), stdout=subprocess.PIPE)
     if res.returncode != 0:
@@ -128,10 +185,7 @@ def main():
     # Reload active sessions in case it was killed.
     active_sessions = get_active_sessions()
 
-    if name in active_sessions:
-        switch_to(name)
-    else:
-        start(name, projects)
+    switch_to(name, projects)
 
 
 if __name__ == "__main__":

@@ -10,5 +10,7 @@ curl
 gcc
 fzf
 ripgrep
-tmux-plugin-manager
 npm
+netcat-traditional
+npm
+fd-find

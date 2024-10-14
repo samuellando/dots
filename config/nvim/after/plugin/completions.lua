@@ -39,7 +39,9 @@ cmp.setup({
         end),
 
         ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
+            local p = vim.api.nvim_win_get_cursor(0)
+            local char = vim.api.nvim_get_current_line():sub(p[2],p[2])
+            if cmp.visible() and char ~= " " then
                 cmp.select_next_item()
             elseif luasnip.locally_jumpable(1) then
                 luasnip.jump(1)

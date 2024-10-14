@@ -15,6 +15,6 @@ vim.keymap.set('n', '<leader>dm', function()
         vim.cmd("DiffviewClose")
     else
         open = true
-        vim.cmd("DiffviewOpen master")
+        vim.cmd("DiffviewOpen origin/master")
     end
 end)
