@@ -1,3 +1,4 @@
+local utils = require("telescope.utils")
 require('telescope').setup {
     defaults = {
         cache_picker = {
@@ -145,7 +146,15 @@ for verb, d in pairs(verbs) do
             nouns = vim.g.telescope_nouns
         end
 
-        local menu_lines = {}
+        local menu_lines = {
+            Menu.item("Current", {
+                key = "cur",
+                path = function()
+                    local relative_path = vim.fn.expand("%:.")
+                    return vim.fn.fnamemodify(relative_path, ":h")
+                end
+            })
+        }
         for _, d in ipairs(nouns) do
             table.insert(menu_lines, Menu.item(d.desc, { key = d.key, path = d.path }))
         end
@@ -170,7 +179,11 @@ for verb, d in pairs(verbs) do
                 local sverb = selected_verb
                 local sd = verbs[sverb]
 
-                local args = { prompt_title = d.desc .. " " .. item.text, search_dirs = { item.path } }
+                if type(item.path) == "function" then
+                    item.path = item.path()
+                end
+
+                local args = { prompt_title = d.desc .. " " .. item.path, search_dirs = { item.path } }
                 if was_visual then
                     vim.cmd("normal gv")
                 end
