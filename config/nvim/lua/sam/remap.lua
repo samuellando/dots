@@ -1,6 +1,6 @@
 vim.g.mapleader = " "
 
--- Split windows -- 
+-- Split windows --
 vim.keymap.set("n", "<leader>vs", ':vsplit<CR>')
 vim.keymap.set("n", "<leader>s", ':split<CR>')
 
@@ -12,7 +12,7 @@ vim.keymap.set("n", "<leader>k", '<C-w>k')
 
 -- Spelling --
 vim.keymap.set("n", "<leader>sp", function()
-   vim.opt.spell = not(vim.opt.spell:get())
+    vim.opt.spell = not (vim.opt.spell:get())
 end)
 
 -- Moving highlighted lines up and down
@@ -35,16 +35,15 @@ if handle ~= nil then
 
     handle:close()
     if string.find(distrib, "Ubuntu") then
-        vim.keymap.set({"n", "v"}, "<leader>y", "y:call system('nc -q 0 host.docker.internal 8377', @0)<CR>")
+        vim.keymap.set({ "n", "v" }, "<leader>y", "y:call system('nc -q 0 host.docker.internal 8377', @0)<CR>")
     else
-        vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+        vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
     end
 end
 vim.keymap.set("n", "<leader>Y", [["+Y]])
-vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 vim.keymap.set("n", "Q", "<nop>")
-vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
 vim.keymap.set("n", "<leader>fr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>cp", ":Copilot panel<CR>")
