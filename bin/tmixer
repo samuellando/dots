@@ -64,8 +64,7 @@ def send_command(name, command, window="1"):
 def send_annon_command(name, dir, command):
     subprocess.run(['tmux', 'split-window', '-t', f"{name}:1."])
     subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {dir}", "enter"])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", command, "enter"])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", "exit", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"{command}&& exit", "enter"])
 
 
 def start(name, projects=None):
