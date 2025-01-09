@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import argparse
+import textwrap
 import subprocess
 from pathlib import Path
 import json
@@ -76,11 +77,11 @@ def start(name, projects=None):
 
     if projects is not None and name in projects:
         if 'startup_windows' in projects[name]:
-            for window in projects[name]['startup_windows']:
-                create_window(name, window["name"])
+            for window_name, window in projects[name]['startup_windows'].items():
+                create_window(name, window_name)
                 if "command" in window:
-                    send_command(name, f"cd {projects[name]["dir"]}", window["name"])
-                    send_command(name, window["command"], window["name"])
+                    send_command(name, f"cd {projects[name]["dir"]}", window_name)
+                    send_command(name, window["command"], window_name)
 
     switch_to(name)
 
@@ -97,7 +98,8 @@ def get_config_projects():
             with open(d, 'r') as f:
                 data = json.load(f)
                 projects.update(data)
-        except Exception:
+        except Exception as e :
+            print("d : ", e)
             pass
 
     return expand_subdirs(projects)
@@ -129,7 +131,31 @@ def get_active_sessions():
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    epilog = f"""
+    """
+    formatter_class=argparse.RawDescriptionHelpFormatter
+    description=textwrap.dedent(f"""
+        Configuration files can be set up in the following locations:
+
+            {CONFIG_DIRS}
+
+        And can be formated as follows:
+        {{
+            "name": {{  -- The name of the project
+                "dir": string,  -- The directory to open
+                "subdirs": bool, -- optional, default false, Whether or not this points to a collection of sub projects
+                "switch_commands": []string, -- optional, background commands to run every time we switch to this session
+                "startup_windows": [ -- optional, Additonal windows to open for the workspace
+                    "window_name": {{
+                        "command": string -- optional, The command to run when opening the window
+                    }}
+                    ...
+                ]
+            }}
+            ...
+        }}
+        """)
+    parser = argparse.ArgumentParser(formatter_class=formatter_class, description=description)
     parser.add_argument('-k', '--kill')
     parser.add_argument('-s', '--switch')
     parser.add_argument('-r', '--reset', action='store_true')
