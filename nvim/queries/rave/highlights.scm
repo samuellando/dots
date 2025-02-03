@@ -1,1 +1,0 @@
-/root/Documents/tree-sitter-rave/queries/rave/highlights.scm

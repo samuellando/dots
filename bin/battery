@@ -1,0 +1,16 @@
+#!/bin/sh
+
+IFS="
+"
+acpi -b | awk -v FS='[,:%]' '{print $2}{print $3}' | {
+    read -r status
+    read -r capacity
+    logger -p 7 -t battery "status: $status"
+    logger -p 7 -t battery "Capacity: $capacity"
+    if [ "$status" = "Discharging" -a "$capacity" -lt 5 ]; then
+      systemctl hybrid-sleep
+    fi
+    if [ "$status" = "Discharging" -a "$capacity" -lt 20 ]; then
+      notify-send "Battery Low" "Battery is at $capacity%"
+    fi
+}

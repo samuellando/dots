@@ -1,0 +1,5 @@
+#!/bin/sh
+
+docker run -id --name devbox -p 2222:22 \
+    --mount type=bind,source=/home/sam/Projects/dots,destination=/home/sam/Projects/dots  \
+    $@ devbox

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export GRIM_DEFAULT_DIR=~/Desktop
+
+grim -g "$(slurp)"

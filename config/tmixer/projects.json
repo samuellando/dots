@@ -1,0 +1,18 @@
+{
+    "projects": {
+        "dir": "/home/sam/Projects",
+        "subdirs": true
+    },
+    "bin": {
+        "dir": "~/bin"
+    },
+    "nvim": {
+        "dir": "~/Projects/dots/config/nvim"
+    },
+    "misc": {
+        "dir": "~/"
+    },
+    "brain": {
+        "dir": "~/Documents/brain"
+    }
+}
