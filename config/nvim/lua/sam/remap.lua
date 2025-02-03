@@ -46,4 +46,7 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set("n", "<leader>fr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("n", "<leader>cp", ":Copilot panel<CR>")
+
+vim.keymap.set("n", "<leader>dn", function()
+    vim.diagnostic.open_float()
+end)
