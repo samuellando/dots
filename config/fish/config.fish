@@ -4,6 +4,14 @@ if status is-interactive
     set fish_cursor_default block
     set fish_cursor_insert line
 
+    function envsource
+      for line in (cat $argv | grep -v '^#' | grep -v '^\s*$')
+        set item (string split -m 1 '=' $line)
+        set -gx $item[1] $item[2]
+        echo "Exported key $item[1]"
+      end
+    end
+
     function fish_prompt
         set -l last_status $status
         if test $last_status -ne 0
@@ -49,4 +57,5 @@ if status is-interactive
     alias vim=nvim
     alias tmux='tmux -u'
     alias ls="ls --color=auto"
+    alias clear=clear; fetch
 end
