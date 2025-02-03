@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# ANSI color codes
+BLUE_BOLD="\e[1;34m"
+RESET="\e[0m"
+
+# Get OS Name
+os_name=$(cat /etc/os-release | grep "^PRETTY_NAME" | cut -d= -f2 | tr -d '"')
+
+# Get Linux Version
+kernel_version=$(uname -r)
+
+# Get Uptime
+uptime_info=$(uptime -p | sed "s/^up //")
+
+# Get Disk Space
+disk_usage=$(df -h --output=target,size,used,avail,pcent | grep '^/home\|^/ ' | awk '{printf " %s\t%s\t%s\t%s\t%s\n", $1, $2, $3, $4, $5}')
+
+# Print the info
+echo ""
+echo -e " $BLUE_BOLD$os_name $kernel_version$RESET"
+echo " $uptime_info"
+echo "$disk_usage"
