@@ -40,12 +40,13 @@ if handle ~= nil then
         vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
     end
 end
-vim.keymap.set("n", "<leader>Y", [["+Y]])
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
+vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set("n", "Q", "<nop>")
 
+-- Find and replace
 vim.keymap.set("n", "<leader>fr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("v", "<leader>fr", [["hy:<C-u>%s/<C-r>h/<C-r>h/gI<Left><Left><Left>]])
 
 vim.keymap.set("n", "<leader>dn", function()
     vim.diagnostic.open_float()

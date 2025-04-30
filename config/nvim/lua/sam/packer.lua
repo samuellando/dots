@@ -13,6 +13,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+    "rest-nvim/rest.nvim",   -- Postman for nvim
     'nvim-lua/plenary.nvim', -- Better lua programming
     -- YOU KNOW
     {
@@ -33,14 +34,27 @@ require("lazy").setup({
     "lewis6991/gitsigns.nvim",             -- add git difs in side bar
     "lukas-reineke/indent-blankline.nvim", -- shows indent guides
     'windwp/nvim-autopairs',               -- auto add pairs
-    "ggandor/leap.nvim",                   -- for leaping around, with s and S as the additional motion.
-    "godlygeek/tabular",                   -- For fixing my gherkin tables
-    "sindrets/diffview.nvim",              -- For easy git diffs
-    "tpope/vim-repeat",                    -- Allows repeats for plugin keybindings
-    "tpope/vim-surround",                  -- Surronding stuff easy
-    "tpope/vim-fugitive",                  -- git wrapper
-    "numToStr/Comment.nvim",               -- Commenting stuff easy
-    'MunifTanjim/nui.nvim',                -- For some menus
+    {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        ---@type Flash.Config
+        opts = {},
+        -- stylua: ignore
+        keys = {
+            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+        },
+    },
+    "godlygeek/tabular",      -- For fixing my gherkin tables
+    "sindrets/diffview.nvim", -- For easy git diffs
+    "tpope/vim-repeat",       -- Allows repeats for plugin keybindings
+    "tpope/vim-surround",     -- Surronding stuff easy
+    "tpope/vim-fugitive",     -- git wrapper
+    "numToStr/Comment.nvim",  -- Commenting stuff easy
+    'MunifTanjim/nui.nvim',   -- For some menus
     -- Tree sitter stuff
     {
         "nvim-treesitter/nvim-treesitter",
@@ -77,46 +91,6 @@ require("lazy").setup({
     { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
     { 'neovim/nvim-lspconfig' },
     { 'L3MON4D3/LuaSnip' },
-    -- NEORG
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 1000,
-        config = true,
-    },
-    {
-        "nvim-neorg/neorg",
-        dependencies = { "luarocks.nvim" },
-        version = "*",
-        config = function()
-            require("neorg").setup {
-                load = {
-                    ["core.defaults"] = {},
-                    ["core.journal"] = {
-                        config = {
-                            strategy = "flat",
-                            workspace = "notes"
-                        }
-                    },
-                    ["core.concealer"] = {},
-                    ["core.export"] = {},
-                    ["core.dirman"] = {
-                        config = {
-                            workspaces = {
-                                notes = "~/Documents/brain",
-                            },
-                            default_workspace = "notes",
-                        },
-                    },
-                    ["core.integrations.nvim-cmp"] = {},
-                    ["core.completion"] = {
-                        config = {
-                            engine = "nvim-cmp"
-                        }
-                    },
-                },
-            }
-        end,
-    },
     -- Completion
     {
         'hrsh7th/nvim-cmp',
@@ -130,5 +104,14 @@ require("lazy").setup({
             'L3MON4D3/LuaSnip',
             'saadparwaiz1/cmp_luasnip',
         }
+    },
+    -- AI
+    {
+        "olimorris/codecompanion.nvim",
+        opts = {},
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
     },
 })
