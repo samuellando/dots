@@ -3,6 +3,8 @@ if status is-interactive
     fish_vi_key_bindings
     set fish_cursor_default block
     set fish_cursor_insert line
+    set -x GOPATH $HOME/go
+    set -x PATH $PATH $GOPATH/bin
 
     function envsource
       for line in (cat $argv | grep -v '^#' | grep -v '^\s*$')
@@ -58,4 +60,9 @@ if status is-interactive
     alias tmux='tmux -u'
     alias ls="ls --color=auto"
     alias clear=clear; fetch
+
+    # Source the .fishrc file from the home directory
+    if test -f $HOME/.fishrc.fish
+        source $HOME/.fishrc.fish
+    end
 end
