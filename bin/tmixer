@@ -87,7 +87,9 @@ def start(name, projects=None):
 
 
 def clean_name(name):
-    return name.replace(" *", "").replace(" +", "")
+    # Replace dots with underscores and remove unwanted characters
+    return name.replace(".", "_").replace(" *", "").replace(" +", "")
+
 
 
 def get_config_projects():
@@ -112,6 +114,7 @@ def expand_subdirs(p):
             for d in os.listdir(data["dir"]):
                 project = data.copy()
                 project['dir'] = data['dir'] + f"/{d}"
+                projects[clean_name(f"{name}-{d}")] = project
                 projects[f"{name}-{d}"] = project
         else:
             projects[name] = data
