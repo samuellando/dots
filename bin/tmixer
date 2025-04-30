@@ -91,6 +91,7 @@ def clean_name(name):
     return name.replace(".", "_").replace(" *", "").replace(" +", "")
 
 
+
 def get_config_projects():
     global CONFIG_DIRS
     projects = {}
@@ -114,6 +115,7 @@ def expand_subdirs(p):
                 project = data.copy()
                 project['dir'] = data['dir'] + f"/{d}"
                 projects[clean_name(f"{name}-{d}")] = project
+                projects[f"{name}-{d}"] = project
         else:
             projects[name] = data
     return projects
