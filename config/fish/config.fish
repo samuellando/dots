@@ -60,10 +60,12 @@ if status is-interactive
     alias vim=nvim
     alias tmux='tmux -u'
     alias ls="ls --color=auto"
-    alias clear=clear; fetch
+    alias clear='command clear; fetch'
 
     # Source the .fishrc file from the home directory
     if test -f $HOME/.fishrc.fish
         source $HOME/.fishrc.fish
     end
+
+    fetch
 end
