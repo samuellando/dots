@@ -9,10 +9,6 @@ else
     Hyprland
     exit
   fi
-  if [[ $(tty) = "/dev/tty2" ]]; then
-    startx ~/.xinitrc2
-    exit
-  fi
 fi
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 export EDITOR=nvim
