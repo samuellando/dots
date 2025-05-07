@@ -2,7 +2,8 @@
 #
 # Create a periodic backup.
 
-repoDir="$HOME/Backups"
+repos=("$HOME/Backups")
+repos+=("$@")
 
 include="
 Documents
@@ -15,7 +16,9 @@ Desktop
 
 for i in $include; do
     echo $i
-    borg create --stats $repoDir::{hostname}--$i-{now:%Y-%m-%d} $HOME/$i
+    archive_name="{hostname}--$i-{now:%Y-%m-%dT%H:%M:%S}"
+    for repo in ${repos[@]}; do
+        echo $repo
+        borg create --stats "$repo::$archive_name" "$HOME/$i"
+    done
 done
-
-/opt/google-cloud-cli/bin/gsutil -m rsync -r ~/Backups gs://samuellando-backups
