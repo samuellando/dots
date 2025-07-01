@@ -70,6 +70,8 @@ pkgs.mkShellNoCC {
     done
     # Symlink all the user scripts
     [ -e ~/bin ] || ln -s ${dots}/bin ~/bin
+    [ -e ~/.zshenv ] || ln -s ${dots}/.zshenv ~/.zshenv
+    [ -e ~/.fishrc.fish ] || cp ${dots}/.fishrc.fish ~/.fishrc.fish
     # Configure the shell environment
     export SHELL=${pkgs.fish}/bin/fish
     if [ -z "$TMUX" ]; then
