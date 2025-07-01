@@ -13,7 +13,7 @@ packages=$(pacman -Q | wc -l)
 kernel_version=$(uname -r)
 
 # Get Uptime
-uptime_info=$(uptime -p | sed "s/^up //")
+uptime_info=$(uptime | sed "s/.* up //" | sed "s/,.*//")
 
 # Get Disk Space
 disk_usage=$(df -h --output=target,size,used,avail,pcent | grep '^/home\|^/ ' | awk '{printf " %s\t%s\t%s\t%s\t%s\n", $1, $2, $3, $4, $5}')
