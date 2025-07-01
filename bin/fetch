@@ -5,23 +5,29 @@ BLUE_BOLD="\e[1;34m"
 RESET="\e[0m"
 
 # Get OS Name
-os_name=$(cat /etc/os-release | grep "^PRETTY_NAME" | cut -d= -f2 | tr -d '"')
-
-packages=$(pacman -Q | wc -l)
+if [ -f /etc/os-release ]; then
+    os_name="$(cat /etc/os-release | grep "^PRETTY_NAME" | cut -d= -f2 | tr -d '"') "
+fi
+# Get the number of packages
+if command -v pacman >/dev/null 2>&1; then
+    packages=$(pacman -Qq | wc -l)
+fi
 
 # Get Linux Version
 kernel_version=$(uname -r)
 
 # Get Uptime
-uptime_info=$(uptime | sed "s/.* up //" | sed "s/,.*//")
+uptime_info=$(awk '{print int($1/86400)" days "int($1%86400/3600)" hours "int(($1%3600)/60)" minutes"}' /proc/uptime)
 
 # Get Disk Space
 disk_usage=$(df -h --output=target,size,used,avail,pcent | grep '^/home\|^/ ' | awk '{printf " %s\t%s\t%s\t%s\t%s\n", $1, $2, $3, $4, $5}')
 
 # Print the info
 echo ""
-echo -e " $BLUE_BOLD$os_name $kernel_version$RESET"
-echo " Packages: $packages"
+echo -e " $BLUE_BOLD$os_name$kernel_version$RESET"
+if [ -n "$packages" ]; then
+    echo " Packages: $packages"
+fi
 echo " $uptime_info"
 echo "$disk_usage"
 echo ""
