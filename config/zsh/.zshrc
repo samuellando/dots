@@ -19,4 +19,10 @@ HISTSIZE=SAVEHIST=10000
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-nix-shell ~/.config/nix/shell.nix; exit
+# Default to the nix shell if not already in one
+if [[ -z $IN_NIX_SHELL && -f $HOME/.config/nix/shell.nix ]]; then
+  nix-shell "$HOME/.config/nix/shell.nix"; exit
+# Otherwise use 
+elif command -v fish >/dev/null 2>&1; then
+  exec fish
+fi

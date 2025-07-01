@@ -73,13 +73,13 @@ pkgs.mkShellNoCC {
     [ -e ~/.zshenv ] || ln -s ${dots}/.zshenv ~/.zshenv
     [ -e ~/.fishrc.fish ] || cp ${dots}/.fishrc.fish ~/.fishrc.fish
     # Configure the shell environment
-    export SHELL=${pkgs.fish}/bin/fish
+    export SHELL=${pkgs.zsh}/bin/zsh
     if [ -z "$TMUX" ]; then
       tmux
       exit
     else
-        exec $SHELL
-        exit
+      exec $SHELL
+      exit
     fi
   '';
 }
