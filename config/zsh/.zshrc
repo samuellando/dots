@@ -19,4 +19,4 @@ HISTSIZE=SAVEHIST=10000
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-fish; exit
+nix-shell ~/.config/nix/shell.nix; exit

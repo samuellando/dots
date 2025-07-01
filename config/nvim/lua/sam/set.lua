@@ -1,5 +1,6 @@
 vim.opt.guicursor = "i-ci:ver30-iCursor-blinkwait300-blinkon200-blinkoff150"
 
+vim.o.exrc = true
 
 vim.opt.errorformat = "%f|%l|"
 
