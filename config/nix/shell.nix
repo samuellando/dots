@@ -1,5 +1,5 @@
 let
-   shell = import ~/Projects/dots/shell.nix;
+   base = import ~/Projects/dots/shell.nix;
 in
 
-shell
+base.shell

@@ -7,10 +7,7 @@ let
   pkgs = import nixpkgs { config = {}; overlays = []; };
 
   dots = ./.;
-in
 
-
-pkgs.mkShellNoCC {
   packages = with pkgs; [
     python312
     fzf
@@ -62,6 +59,8 @@ pkgs.mkShellNoCC {
     })
   ];
 
+  shell = pkgs.mkShellNoCC {
+  packages = packages;
   shellHook = ''
     # Symlink all the config files
     mkdir -p ~/.config
@@ -82,4 +81,8 @@ pkgs.mkShellNoCC {
       exit
     fi
   '';
+  };
+in
+{
+  inherit shell packages pkgs;
 }
