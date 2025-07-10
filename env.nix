@@ -1,19 +1,20 @@
-let
+let 
   nixpkgs = (fetchTarball {
       url = "https://github.com/NixOS/nixpkgs/archive/b9c03fbbaf84d85bb28eee530c7e9edc4021ca1b.tar.gz";
       sha256 = "sha256:19wkjfhyidvkp4wjrr7idx83iiql6bskp1x1wrp52y0lc3xx847y";
   });
-
   pkgs = import nixpkgs { config = {}; overlays = []; };
-
-  dots = ./.;
-
+in
+{ 
+  pkgs = pkgs;
+  DevEnv = let
   packages = with pkgs; [
     python312
     fzf
     tmux
     fish
     zsh
+    git
     (neovim.override {
       vimAlias = true;
       viAlias = true;
@@ -58,31 +59,9 @@ let
       };
     })
   ];
-
-  shell = pkgs.mkShellNoCC {
-  packages = packages;
-  shellHook = ''
-    # Symlink all the config files
-    mkdir -p ~/.config
-    for d in $(ls ${dots}/config); do
-        [ -e ~/.config/$d ] || ln -s ${dots}/config/$d ~/.config/$d
-    done
-    # Symlink all the user scripts
-    [ -e ~/bin ] || ln -s ${dots}/bin ~/bin
-    [ -e ~/.zshenv ] || ln -s ${dots}/.zshenv ~/.zshenv
-    [ -e ~/.fishrc.fish ] || cp ${dots}/.fishrc.fish ~/.fishrc.fish
-    # Configure the shell environment
-    export SHELL=${pkgs.zsh}/bin/zsh
-    if [ -z "$TMUX" ]; then
-      tmux
-      exit
-    else
-      exec $SHELL
-      exit
-    fi
-  '';
-  };
 in
-{
-  inherit shell packages pkgs;
+  pkgs.buildEnv {
+      name = "DevEnv";
+      paths = packages;
+  };
 }
