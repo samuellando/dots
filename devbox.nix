@@ -9,7 +9,7 @@ let
       sh ${dots}/bootstrap.sh ${dots}
       # Configure the shell environment
       export SHELL=${base.pkgs.zsh}/bin/zsh
-      tmux
+      zsh
       exit
     '';
 in
