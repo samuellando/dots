@@ -38,7 +38,8 @@ def kill(name):
 def reset(name):
     temp_session = str(uuid.uuid4())
     start(temp_session)
-    send_command(temp_session, f"tmixer -k {name}; tmixer -s {name}; tmux kill-session -t {temp_session}")
+    send_command(
+        temp_session, f"tmixer -k {name}; tmixer -s {name}; tmux kill-session -t {temp_session}")
 
 
 def switch_to(name, projects=None):
@@ -55,17 +56,21 @@ def switch_to(name, projects=None):
 
 
 def create_window(name, window_name):
-    subprocess.run(["tmux", "new-window", "-t", f"{name}:", "-d", "-n", f"{window_name}"])
+    subprocess.run(["tmux", "new-window", "-t",
+                   f"{name}:", "-d", "-n", f"{window_name}"])
 
 
 def send_command(name, command, window="1"):
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:{window}", command, "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t',
+                   f"{name}:{window}", command, "enter"])
 
 
 def send_annon_command(name, dir, command):
     subprocess.run(['tmux', 'split-window', '-t', f"{name}:1."])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"cd {dir}", "enter"])
-    subprocess.run(['tmux', 'send-keys', '-t', f"{name}:1", f"{command}&& exit", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t',
+                   f"{name}:1", f"cd {dir}", "enter"])
+    subprocess.run(['tmux', 'send-keys', '-t',
+                   f"{name}:1", f"{command}&& exit", "enter"])
 
 
 def start(name, projects=None):
@@ -80,7 +85,8 @@ def start(name, projects=None):
             for window_name, window in projects[name]['startup_windows'].items():
                 create_window(name, window_name)
                 if "command" in window:
-                    send_command(name, f"cd {projects[name]["dir"]}", window_name)
+                    send_command(
+                        name, f"cd {projects[name]["dir"]}", window_name)
                     send_command(name, window["command"], window_name)
 
     switch_to(name)
@@ -91,7 +97,6 @@ def clean_name(name):
     return name.replace(".", "_").replace(" *", "").replace(" +", "")
 
 
-
 def get_config_projects():
     global CONFIG_DIRS
     projects = {}
@@ -100,7 +105,9 @@ def get_config_projects():
             with open(d, 'r') as f:
                 data = json.load(f)
                 projects.update(data)
-        except Exception as e :
+        except FileNotFoundError:
+            pass
+        except Exception as e:
             print("d : ", e)
             pass
 
@@ -111,11 +118,14 @@ def expand_subdirs(p):
     projects = {}
     for name, data in p.items():
         if data.get("subdirs", False):
-            for d in os.listdir(data["dir"]):
-                project = data.copy()
-                project['dir'] = data['dir'] + f"/{d}"
-                projects[clean_name(f"{name}-{d}")] = project
-                projects[f"{name}-{d}"] = project
+            try:
+                for d in os.listdir(os.path.expanduser(data["dir"])):
+                    project = data.copy()
+                    project['dir'] = data['dir'] + f"/{d}"
+                    projects[clean_name(f"{name}-{d}")] = project
+                    projects[f"{name}-{d}"] = project
+            except FileNotFoundError:
+                pass
         else:
             projects[name] = data
     return projects
@@ -136,8 +146,8 @@ def get_active_sessions():
 def main():
     epilog = f"""
     """
-    formatter_class=argparse.RawDescriptionHelpFormatter
-    description=textwrap.dedent(f"""
+    formatter_class = argparse.RawDescriptionHelpFormatter
+    description = textwrap.dedent(f"""
         Configuration files can be set up in the following locations:
 
             {CONFIG_DIRS}
@@ -158,7 +168,8 @@ def main():
             ...
         }}
         """)
-    parser = argparse.ArgumentParser(formatter_class=formatter_class, description=description)
+    parser = argparse.ArgumentParser(
+        formatter_class=formatter_class, description=description)
     parser.add_argument('-k', '--kill')
     parser.add_argument('-s', '--switch')
     parser.add_argument('-r', '--reset', action='store_true')
@@ -205,7 +216,8 @@ def main():
         "--bind",
         "ctrl-r:execute(tmixer -r)+close"
     ]
-    res = subprocess.run(fzf_command, input="\n".join(names).encode(), stdout=subprocess.PIPE)
+    res = subprocess.run(fzf_command, input="\n".join(
+        names).encode(), stdout=subprocess.PIPE)
     if res.returncode != 0:
         exit()
     name = clean_name(res.stdout.decode("utf-8").split("\n")[0])

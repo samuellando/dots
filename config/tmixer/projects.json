@@ -1,6 +1,6 @@
 {
     "projects": {
-        "dir": "/home/sam/Projects",
+        "dir": "~/Projects",
         "subdirs": true
     },
     "bin": {
