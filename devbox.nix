@@ -4,12 +4,17 @@
 let
     dots = ./.;
     shellHook = ''
-      export LANG=en_US.UTF-8
-      sh ${dots}/bootstrap.sh ${dots}
-      # Configure the shell environment
-      export SHELL=${base.pkgs.zsh}/bin/zsh
-      zsh
-      exit
+      ln -s /bin/zsh /bin/sh
+      useradd -m sam
+      su sam -c "
+          export LANG=en_US.UTF-8
+          sh ${dots}/bootstrap.sh ${dots}
+          # Configure the shell environment
+          export SHELL=${base.pkgs.zsh}/bin/zsh
+          cd ~
+          zsh
+          exit
+      "
     '';
 in
 
@@ -22,14 +27,7 @@ base.pkgs.dockerTools.buildImage {
     sha256 = "sha256-u1UCCUAkPIDCsEAxLwi3z2szxRGR7/atte319k5QxNM=";
   };
   copyToRoot = base.DevEnv;
-  runAsRoot = ''
-    ${base.pkgs.dockerTools.shadowSetup}
-    ln -s /bin/zsh /bin/sh
-    useradd -m sam
-  '';
   config = {
-    user = "sam";
-    WorkingDir = "/home/sam";
     Cmd = [ "${base.pkgs.bash}/bin/bash" "-c" shellHook ];
   };
 }
