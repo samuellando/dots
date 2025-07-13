@@ -4,14 +4,15 @@ let
       sha256 = "sha256:19wkjfhyidvkp4wjrr7idx83iiql6bskp1x1wrp52y0lc3xx847y";
   });
   pkgs = import nixpkgs { config = {}; overlays = []; };
-in
-{ 
-  pkgs = pkgs;
-  DevEnv = let
   packages = with pkgs; [
     python312
     fzf
     tmux
+    curl
+    wget
+    ripgrep
+    unzip
+    libgcc
     fish
     zsh
     git
@@ -60,7 +61,10 @@ in
     })
   ];
 in
-  pkgs.buildEnv {
+{ 
+  pkgs = pkgs;
+  packages = packages;
+  DevEnv = pkgs.buildEnv {
       name = "DevEnv";
       paths = packages;
   };
