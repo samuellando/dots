@@ -18,16 +18,14 @@ let
       "
     '';
 in
-
-
-base.pkgs.dockerTools.buildImage {
+base.pkgs.dockerTools.buildLayeredImage {
   name = "devbox";
   fromImage = base.pkgs.dockerTools.pullImage {
     imageName = "ubuntu";
     imageDigest = "sha256:10b61aabaaf0123f3670112057c3b3ccf27c808ddb892ba5a4e32366bff7f3fe";
     sha256 = "sha256-u1UCCUAkPIDCsEAxLwi3z2szxRGR7/atte319k5QxNM=";
   };
-  copyToRoot = base.pkgs.buildEnv {
+  contents = base.pkgs.buildEnv {
       name = "DevEnv";
       paths = base.packages ++ [
         base.pkgs.cacert

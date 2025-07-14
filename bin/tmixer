@@ -1,6 +1,8 @@
 #!/bin/python3
 
 import argparse
+import time
+import requests
 import textwrap
 import subprocess
 from pathlib import Path
@@ -12,6 +14,9 @@ CONFIG_DIRS = [
     str(Path.home()) + '/.tmixer-projects.json',
     str(Path.home()) + '/.config/tmixer/projects.json'
 ]
+
+CACHE_PATH = str(Path.home()) + '/.cache/tmixer'
+CACHE_EXPIRY = 3600  # seconds (1-hour)
 
 PROJECTS_DIR = str(Path.home()) + '/Projects'
 
@@ -77,6 +82,10 @@ def start(name, projects=None):
     subprocess.run(['tmux', 'new', '-s', name, '-d'])
 
     if projects is not None:
+        if projects[name].get("giturl", False) and not os.path.exists(projects[name]['dir']):
+            os.makedirs(os.path.expanduser(projects[name]["dir"]), exist_ok=True)
+            send_command(name, f"cd {projects[name]['dir']}/..")
+            send_command(name, f"git clone {projects[name]['giturl']}")
         send_command(name, f"cd {projects[name]['dir']}")
         send_command(name, "vim .")
 
@@ -113,6 +122,49 @@ def get_config_projects():
 
     return expand_subdirs(projects)
 
+def load_github_cache(username):
+    cachefile = os.path.join(CACHE_PATH, f'{username}_repos.json')
+    try:
+        if not os.path.exists(cachefile):
+            return None
+        if time.time() - os.path.getmtime(cachefile) > CACHE_EXPIRY:
+            return None
+        with open(cachefile, 'r') as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+def save_github_cache(username, data):
+    os.makedirs(CACHE_PATH, exist_ok=True)
+    cachefile = os.path.join(CACHE_PATH, f'{username}_repos.json')
+    with open(cachefile, 'w') as f:
+        json.dump(data, f)
+
+def get_user_github_projects(username):
+    cache = load_github_cache(username)
+    if cache is not None:
+        return cache
+
+    url = f"https://api.github.com/users/{username}/repos"
+    repos = []
+    page = 1
+
+    while True:
+        response = requests.get(url, params={'per_page': 100, 'page': page})
+        if response.status_code != 200:
+            raise Exception(f"GitHub API error: {response.status_code} - {response.text}")
+
+        data = response.json()
+        if not data:
+            break
+
+        for repo in data:
+            repos.append(repo)
+
+        page += 1
+
+    save_github_cache(username, repos)
+    return repos
 
 def expand_subdirs(p):
     projects = {}
@@ -123,9 +175,14 @@ def expand_subdirs(p):
                     project = data.copy()
                     project['dir'] = data['dir'] + f"/{d}"
                     projects[clean_name(f"{name}-{d}")] = project
-                    projects[f"{name}-{d}"] = project
             except FileNotFoundError:
                 pass
+        if data.get("gituser", False):
+            for d in get_user_github_projects(data["gituser"]):
+                project = data.copy()
+                project['dir'] = data['dir'] + f"/{d["name"]}"
+                project['giturl'] = d["clone_url"]
+                projects[clean_name(f"{name}-{d["name"]}")] = project
         else:
             projects[name] = data
     return projects

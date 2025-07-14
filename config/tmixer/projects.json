@@ -1,7 +1,8 @@
 {
     "projects": {
         "dir": "~/Projects",
-        "subdirs": true
+        "subdirs": true,
+        "gituser": "samuellando"
     },
     "bin": {
         "dir": "~/bin"

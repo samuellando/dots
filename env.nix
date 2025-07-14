@@ -5,14 +5,15 @@ let
   });
   pkgs = import nixpkgs { config = {}; overlays = []; };
   packages = with pkgs; [
-    python312
+    (python312.withPackages (python-pkgs: [
+      python-pkgs.requests
+    ]))
     fzf
     tmux
     curl
     wget
     ripgrep
     unzip
-    libgcc
     fish
     zsh
     git
