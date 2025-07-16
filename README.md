@@ -19,14 +19,14 @@ I like to split my configuration into two parts, each with a different approach
 
 This is designed to work on Arch Linux with with nix installed
 
-Install all the required packages locally using NIX.
-```
-nix-env -f env.nix -iA DevEnv
-```
-
 Run the bootstrapping script to setup the user home directory.
 ```
 sh bootstrap.sh
+```
+
+Install all the required packages locally using NIX.
+```
+nix profile install
 ```
 
 ### Devbox
