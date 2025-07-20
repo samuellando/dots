@@ -73,7 +73,7 @@
     in
     { 
       pkgs = pkgs;
-      buildContainer = {extraPackages} : 
+      buildContainer = {extraPackages ? [], extraShellHooks ? ""} : 
           let 
             dots = self;
             shellHook = ''
@@ -86,6 +86,7 @@
               cp ${dots}/flake.lock ~/.config/nix
               # Configure the shell environment
               export SHELL=${pkgs.zsh}/bin/zsh
+              ${extraShellHooks}
               cd ~
               zsh
               exit
@@ -112,12 +113,10 @@
           name = "MyDevEnv";
           paths = packages;
          };
-         container = self.outputs.buildContainer {
-             extraPackages = [
-                 pkgs.go
-                 pkgs.hello
-             ];
-         };
+         container = self.outputs.buildContainer { extraShellHooks = ''
+         touch ~/hello
+         touch ~/world
+         ''; };
     };
     };
 }
