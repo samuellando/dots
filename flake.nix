@@ -36,8 +36,14 @@
                 telescope-nvim
                 codecompanion-nvim
                 nvim-cmp
-                harpoon2
+                cmp-nvim-lua
+                cmp-nvim-lsp
+                cmp-buffer
+                cmp-path
+                cmp-cmdline
                 luasnip
+                cmp_luasnip
+                harpoon2
                 oil-nvim
                 lualine-nvim
                 lsp-zero-nvim
