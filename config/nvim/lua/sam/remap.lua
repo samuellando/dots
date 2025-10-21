@@ -41,7 +41,6 @@ if handle ~= nil then
     end
 end
 
-vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set("n", "Q", "<nop>")
 
 -- Find and replace
