@@ -7,7 +7,7 @@
 
     outputs = {self, nixpkgs}:
     let 
-      system = "x86_64-linux";
+      system = builtins.currentSystem;
       pkgs = import nixpkgs { inherit system; };
       packages = with pkgs; [
         (python312.withPackages (python-pkgs: [
@@ -119,10 +119,7 @@
           name = "MyDevEnv";
           paths = packages;
          };
-         container = self.outputs.buildContainer { extraShellHooks = ''
-         touch ~/hello
-         touch ~/world
-         ''; };
+         container = self.outputs.buildContainer {};
     };
     };
 }
