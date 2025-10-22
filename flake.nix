@@ -90,18 +90,18 @@
                     dots = self;
                     shellHook = ''
                       ln -s /bin/zsh /bin/sh
+                      useradd sam -m -s /bin/zsh
+                      sh ${dots}/bootstrap.sh ${dots} /home/sam
+                      # Make nix use the same lock file as this build.
+                      mkdir -p /home/sam/.config/nix
+                      cp ${dots}/flake.nix /home/sam/.config/nix
+                      cp ${dots}/flake.lock /home/sam/.config/nix
+                      chown -R sam /home/sam
                       export LANG=en_US.UTF-8
                       export SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt
-                      sh ${dots}/bootstrap.sh ${dots}
-                      # Make nix use the same lock file as this build.
-                      cp ${dots}/flake.nix ~/.config/nix
-                      cp ${dots}/flake.lock ~/.config/nix
-                      # Configure the shell environment
                       export SHELL=${pkgs.zsh}/bin/zsh
-                      ${extraShellHooks}
-                      cd ~
-                      zsh
-                      exit
+                      cd /home/sam
+                      su sam
                     '';
                   in
                   pkgs.dockerTools.buildLayeredImage {
