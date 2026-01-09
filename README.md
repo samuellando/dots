@@ -2,20 +2,10 @@
 
 This Project contains dot file configurations for my development environment.
 
-I like to split my configuration into two parts, each with a different approach
-
-- The development environment
-    - Terminal based, TMUX + NVIM.
-    - Reproducible builds using NIX.
-    - Docker container as the runtime for portability.
-
 - The user environment
     - Arch Linux based Wayland configuration.
-    - Does not need the rigor and reproducibility of the development environment.
 
 ## Development environment
-
-### Local installation
 
 This is designed to work on Arch Linux with with nix installed
 
@@ -29,17 +19,9 @@ Install all the required packages locally using NIX.
 nix profile install
 ```
 
-### Devbox
+There is still some additional manual setup required for certain things like 
+backuops and gpg keys, but this is enough to get up and running quickly.
 
-Devbox packages the development environment into a docker container, which
-makes it a lot easier to deploy it on other systems. Such as a work computer 
-for example.
+## New setup checklist
 
-- Build the docker image
-```
-docker load < $(nix-build devbox.nix)
-```
-- Run the docker image however you want
-```
-docker run -it devbox:[Generated-Tag]
-```
+TODO

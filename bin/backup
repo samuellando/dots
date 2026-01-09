@@ -2,23 +2,52 @@
 #
 # Create a periodic backup.
 
-repos=("$HOME/Backups")
-repos+=("$@")
-
 include="
 Documents
 .password-store
-.ssh
 Projects
 Pictures
 Desktop
 "
 
-for i in $include; do
-    echo $i
-    archive_name="{hostname}--$i-{now:%Y-%m-%dT%H:%M:%S}"
-    for repo in ${repos[@]}; do
-        echo $repo
-        borg create --stats "$repo::$archive_name" "$HOME/$i"
-    done
+repos=("$HOME/Backups")
+run_rclone=0
+
+# Parse arguments, looking for 'rclone' flag
+newargs=()
+for arg in "$@"; do
+    if [ "$arg" = "--rclone" ]; then
+        run_rclone=1
+    else
+        newargs+=("$arg")
+    fi
 done
+
+repos+=("${newargs[@]}")
+
+date_part="$(date +"%Y-%m-%dT%H:%M:%S")"
+
+include_args=""
+for i in $include; do
+    include_args="$include_args $HOME/$i"
+done
+
+echo "Including $include_args"
+
+archive_name="{hostname}--$date_part"
+for repo in ${repos[@]}; do
+    echo $repo
+    echo "Creating backup"
+    borg create "$repo::$archive_name" $include_args
+    echo "Pruneing"
+    borg prune $repo --keep-daily=7 --keep-weekly=8 --keep-monthly=12
+    echo "Compacting"
+    borg compact $repo
+done
+
+if [ $run_rclone -eq 1 ]; then
+    echo "Cloneing to GCS"
+    rclone sync $HOME/Backups brogclone:samuellando-backup-borgclone/Backups
+fi
+
+echo "Done"
