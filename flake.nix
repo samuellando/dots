@@ -9,7 +9,6 @@
     let 
       systems = [ "x86_64-linux" "aarch64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
       packagesFor = forAllSystems (system: with nixpkgsFor.${system}; [
             (python312.withPackages (python-pkgs: [
               python-pkgs.requests
@@ -75,13 +74,11 @@
           ]);
         in
         {
-          pkgs = forAllSystems (system: nixpkgsFor.${system});  
           packages = forAllSystems (system: {
              default = nixpkgsFor.${system}.buildEnv {
               name = "MyDevEnv";
               paths = packagesFor.${system};
              };
-             container = self.outputs.buildContainer.${system} {};
         });
     };
 }
