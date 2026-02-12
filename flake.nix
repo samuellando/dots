@@ -9,9 +9,13 @@
     let 
       systems = [ "x86_64-linux" "aarch64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
+      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
       packagesFor = forAllSystems (system: with nixpkgsFor.${system}; [
             (python312.withPackages (python-pkgs: [
               python-pkgs.requests
+              python-pkgs.pygame
+              python-pkgs.imageio
+              python-pkgs.heapdict
             ]))
             fzf
             tmux
