@@ -1,16 +1,17 @@
 ###########
 # STARTUP #
 ###########
-# Add user scripts to the PATH.
+export PATH="$HOME/.nix-profile/bin:$HOME/bin:/usr/local/bin:$HOME/go/bin:$PATH"
+
 if [[ $OSTYPE == "darwin"* ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 else
   if [[ $(tty) = "/dev/tty1" ]]; then
-    start-hyprland
+    exec sway
     exit
   fi
 fi
-export PATH="$HOME/.nix-profile/bin:$HOME/bin:/usr/local/bin:$HOME/go/bin:$PATH"
+
 export EDITOR=nvim
 export VISUAL=nvim
 
@@ -19,10 +20,8 @@ HISTSIZE=SAVEHIST=10000
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-# Default to the nix shell if not already in one
 if [[ $(command -v tmux) && -z $TMUX ]]; then
-  # exec tmux
-  exec tmixer start
+    exec tmixer start
 elif command -v fish >/dev/null 2>&1; then
-  exec fish
+    exec fish
 fi
