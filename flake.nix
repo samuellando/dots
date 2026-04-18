@@ -1,8 +1,16 @@
 {
-    description = "Dev environment with Neovim some dev tools and some plugins";
+    description = ''
+        Dev environment setup, meant to get everything up and running
+        quickly and consistently.
+
+        nvim + tmux
+
+        Trying to include all the tool needed. However the OS package manager
+        should be used to install other stuff, such as programming languages.
+    '';
 
     inputs = {
-        nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+        nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11";
     };
 
     outputs = {self, nixpkgs}:
@@ -11,12 +19,6 @@
       forAllSystems = nixpkgs.lib.genAttrs systems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
       packagesFor = forAllSystems (system: with nixpkgsFor.${system}; [
-            (python312.withPackages (python-pkgs: [
-              python-pkgs.requests
-              python-pkgs.pygame
-              python-pkgs.imageio
-              python-pkgs.heapdict
-            ]))
             fzf
             tmux
             curl
@@ -55,6 +57,7 @@
                     formatter-nvim
                     indent-blankline-nvim
                     mason-nvim
+                    nvim-lint
                     nui-nvim
                     nvim-treesitter.withAllGrammars
                     mason-lspconfig-nvim
