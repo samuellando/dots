@@ -3,9 +3,6 @@ if status is-interactive
     fish_vi_key_bindings
     set fish_cursor_default block
     set fish_cursor_insert line
-    set -x GOPATH $HOME/go
-    set -x PATH $PATH $GOPATH/bin
-
 
     function envsource
       for line in (cat $argv | grep -v '^#' | grep -v '^\s*$')

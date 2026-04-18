@@ -1,2 +1,4 @@
 config/zsh/.zcompdump
 config/tmux/plugins/*
+config/fish/conf.d/*
+config/fish/fish_var*
