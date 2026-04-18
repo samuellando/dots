@@ -1,0 +1,2 @@
+
+47 * * * * anacron -t /home/sam/.anacrontab -S /home/sam/.acancron/spool/ -s
