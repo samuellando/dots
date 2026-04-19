@@ -25,14 +25,15 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- greatest remap ever
+-- paste the last thing over the current selection
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
--- next greatest remap ever : asbjornHaland
+-- copy to the system clipboard
 local handle = io.popen('cat /etc/*-release | grep "DISTRIB_ID"')
 if handle ~= nil then
     local distrib = handle:read("*a")
 
+    -- Ubuntu implies it's a docker container, there should be a service on host to copy to
     handle:close()
     if string.find(distrib, "Ubuntu") then
         vim.keymap.set({ "n", "v" }, "<leader>y", "y:call system('nc -q 0 host.docker.internal 8377', @0)<CR>")
