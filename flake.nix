@@ -58,8 +58,23 @@
             '';
             packages.myVimPackage = with pkgs.vimPlugins; {
               start = [
+                /* tools */
                 telescope-nvim
+                harpoon2
+                oil-nvim
                 codecompanion-nvim
+                vim-fugitive
+                undotree
+                flash-nvim
+                diffview-nvim
+                nvim-autopairs
+                comment-nvim
+                quickfix-reflector-vim
+                tabular
+                /* lsp stuff */
+                nvim-lspconfig
+                nvim-lint
+                /* Code completions */
                 nvim-cmp
                 cmp-nvim-lua
                 cmp-nvim-lsp
@@ -68,31 +83,16 @@
                 cmp-cmdline
                 luasnip
                 cmp_luasnip
-                harpoon2
-                oil-nvim
-                lualine-nvim
-                lsp-zero-nvim
-                vim-sensible
-                formatter-nvim
-                indent-blankline-nvim
-                mason-nvim
-                nvim-lint
-                nui-nvim
-                nvim-treesitter.withAllGrammars
-                mason-lspconfig-nvim
-                gitsigns-nvim
-                nvim-autopairs
-                comment-nvim
-                vim-fugitive
-                rest-nvim
-                undotree
-                flash-nvim
-                tabular
-                diffview-nvim
-                vim-repeat
-                vim-surround
+                /* Visual */
                 gruvbox-material
-                quickfix-reflector-vim
+                nvim-treesitter.withAllGrammars
+                lualine-nvim
+                indent-blankline-nvim
+                nui-nvim
+                gitsigns-nvim
+                /* Dependencies */
+                vim-repeat
+                vim-sensible
               ];
             };
           };
