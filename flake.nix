@@ -76,6 +76,8 @@
                 nvim-lint
                 /* Code completions */
                 blink-cmp
+                /* Code naviagation */
+                flash-nvim
                 /* Visual */
                 gruvbox-material
                 nvim-treesitter.withAllGrammars
