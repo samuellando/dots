@@ -30,10 +30,13 @@ function getVisualSelection()
     end
 end
 
--- Make a telescope window resumable
-function ts_call(func, args)
-    args = args or {}
+function ts_call(func, inArgs)
     return function()
+        local copy = {}
+        for k, v in pairs(inArgs) do
+            copy[k] = v
+        end
+        local args = copy or {}
         -- Check if it's been used.
         if vim.fn.mode() ~= "n" then
             args["default_text"] = getVisualSelection()
