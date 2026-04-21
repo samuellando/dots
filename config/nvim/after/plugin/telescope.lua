@@ -1,3 +1,20 @@
+--
+-- How to Register Custom Menu Items:
+--
+-- You can add your own custom menu items ("nouns") to the menu shown by this script by setting
+-- the global variable `vim.g.telescope_nouns` in your project or personal config. For each menu item,
+-- provide a description, a key (used for selection), and a `path` (string, or function returning the desired path).
+--
+-- Example to place in your project-specific `.nvim.lua` or other Neovim config:
+--
+--   vim.g.telescope_nouns = {
+--     { desc = "Project Root", key = "root", path = vim.fn.getcwd() },
+--     { desc = "Dotfiles", key = "dot", path = os.getenv("HOME") .. "/.dotfiles" },
+--   }
+--
+-- These will show up in the menu displayed when you press <leader>x[verb].
+--
+
 require('telescope').setup {
     pickers = {
         find_files = {
