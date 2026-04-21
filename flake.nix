@@ -75,14 +75,7 @@
                 nvim-lspconfig
                 nvim-lint
                 /* Code completions */
-                nvim-cmp
-                cmp-nvim-lua
-                cmp-nvim-lsp
-                cmp-buffer
-                cmp-path
-                cmp-cmdline
-                luasnip
-                cmp_luasnip
+                blink-cmp
                 /* Visual */
                 gruvbox-material
                 nvim-treesitter.withAllGrammars
