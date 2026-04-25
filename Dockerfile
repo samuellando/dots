@@ -13,6 +13,7 @@ RUN chown $USR /nix
 
 USER $USR
 RUN curl -sL https://nixos.org/nix/install | sh -s -- --no-daemon
+RUN echo "export PATH=/home/$USR/.nix-profile/bin:$PATH" > /home/$USR/.zshrc
 
 RUN mkdir -p "/home/$USR/.config/nix"
 RUN echo "experimental-features = nix-command flakes" > /home/$USR/.config/nix/nix.conf

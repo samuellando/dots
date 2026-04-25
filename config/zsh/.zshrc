@@ -20,7 +20,7 @@ HISTSIZE=SAVEHIST=10000
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-if [[ $(command -v tmux) && -z $TMUX ]]; then
+if [[ $(command -v tmixer) && -z $TMUX ]]; then
     exec tmixer start
 elif command -v fish >/dev/null 2>&1; then
     exec fish
