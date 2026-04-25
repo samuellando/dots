@@ -35,6 +35,8 @@ client.focused #dfbf8e #dfbf8e #928374 #dfbf8e
 
 ## Output configuarion
 
+output DP-3 mode 1920x1080
+
 bindswitch --locked lid:off exec swaymsg output $disp enable
 bindswitch --locked lid:on exec swaymsg output $disp disable
 
@@ -43,7 +45,7 @@ workspace 2 output $disp
 workspace 3 output $disp
 workspace 4 output $disp
 workspace 5 output $disp
-workspace 6 output $disp2
+workspace 6 output $disp2 DP-3
 workspace 7 output $disp2
 workspace 9 output $disp2
 workspace 10 output $disp2
