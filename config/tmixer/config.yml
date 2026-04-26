@@ -1,0 +1,20 @@
+defaultProject: home
+ttl: 24h
+
+projects:
+  - name: home
+    directory: "~/"
+
+  - name: bin
+    directory: "~/bin"
+    switchCommands:
+      - [tmux, display, "OK"]
+
+  - name: projects
+    directory: "~/Projects"
+    subDirectories: true
+
+    windows:
+      -  command: ["nvim", "."]
+
+      - name: "shell"
