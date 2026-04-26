@@ -1,10 +1,14 @@
 #!/bin/sh
 dots=${1:-~/.nix-profile/share/home}
 home=${2:-~}
-# Symlink all the config files
+# copy/replace all config files
 mkdir -p ${home}/.config
 for d in $(ls ${dots}/config); do
-    [ -e ${home}/.config/$d ] || ln -s ${dots}/config/$d ${home}/.config/$d
+    if [ -e ${home}/.config/$d ]; then
+        rm -r ${home}/.config/$d
+    fi
+    cp -r ${dots}/config/$d ${home}/.config
+    chmod +w ${home}/.config/$d
 done
 # Symlink home dir dot files
 [ -e ${home}/.zshenv ] || ln -s ${dots}/.zshenv ${home}/.zshenv

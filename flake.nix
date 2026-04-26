@@ -15,14 +15,8 @@
 
   outputs = { self, nixpkgs }:
     let
-      systems = [ "x86_64-linux" "aarch64-linux" ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
-      dotfilesFor = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-        in
-        pkgs.stdenv.mkDerivation {
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
+      dots = pkgs.stdenv.mkDerivation {
           name = "dots";
           src = self;
           installPhase = ''
@@ -36,8 +30,8 @@
             cp $src/bootstrap_dots $out/bin/bootstrap_dots
             cp $src/bin/* $out/bin
           '';
-        });
-      packagesFor = forAllSystems (system: with nixpkgsFor.${system}; [
+        };
+      packages = with pkgs; [
         fzf
         tmux
         curl
@@ -92,14 +86,14 @@
             };
           };
         })
-      ]);
+      ] ++ [dots];
     in
     {
-      packages = forAllSystems (system: {
-        default = nixpkgsFor.${system}.buildEnv {
+      packages.x86_64-linux = {
+        default = pkgs.buildEnv {
           name = "MyDevEnv";
-          paths = packagesFor.${system} ++ [ dotfilesFor.${system} ];
+          paths = packages;
         };
-      });
+      };
     };
 }
