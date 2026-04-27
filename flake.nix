@@ -15,85 +15,91 @@
 
   outputs = { self, nixpkgs }:
     let
-      pkgs = import nixpkgs { system = "x86_64-linux"; };
-      dots = pkgs.stdenv.mkDerivation {
-          name = "dots";
-          src = self;
-          installPhase = ''
-            mkdir -p $out/share/home
-            cp $src/.zshenv $out/share/home/.zshenv
-            cp $src/.fishrc.fish $out/share/home/
-            cp $src/.crontab $out/share/home/
-            cp $src/.anacrontab $out/share/home/
-            cp -r $src/config $out/share/home/
-            mkdir -p $out/bin
-            cp $src/bootstrap_dots $out/bin/bootstrap_dots
-            cp $src/bin/* $out/bin
-          '';
-        };
-      packages = with pkgs; [
-        fzf
-        tmux
-        curl
-        wget
-        ripgrep
-        unzip
-        fish
-        zsh
-        git
-        (neovim.override {
-          vimAlias = true;
-          viAlias = true;
-          configure = {
-            customLuaRC = ''
-              require("sam")
-              vim.g.gruvbox_material_enable_italic = true
-              vim.cmd.colorscheme('gruvbox-material')
-            '';
-            packages.myVimPackage = with pkgs.vimPlugins; {
-              start = [
-                /* tools */
-                telescope-nvim
-                harpoon2
-                oil-nvim
-                codecompanion-nvim
-                vim-fugitive
-                undotree
-                flash-nvim
-                diffview-nvim
-                nvim-autopairs
-                comment-nvim
-                quickfix-reflector-vim
-                tabular
-                /* lsp stuff */
-                nvim-lspconfig
-                nvim-lint
-                /* Code completions */
-                blink-cmp
-                /* Code naviagation */
-                flash-nvim
-                /* Visual */
-                gruvbox-material
-                nvim-treesitter.withAllGrammars
-                lualine-nvim
-                indent-blankline-nvim
-                nui-nvim
-                gitsigns-nvim
-                /* Dependencies */
-                vim-repeat
-                vim-sensible
-              ];
+      systems = [ "x86_64-linux" "aarch64-linux"];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+      generate = system : 
+        let
+          pkgs = import nixpkgs { system = system; };
+          dots = pkgs.stdenv.mkDerivation {
+              name = "dots";
+              src = self;
+              installPhase = ''
+                mkdir -p $out/share/home
+                cp $src/.zshenv $out/share/home/.zshenv
+                cp $src/.fishrc.fish $out/share/home/
+                cp $src/.crontab $out/share/home/
+                cp $src/.anacrontab $out/share/home/
+                cp -r $src/config $out/share/home/
+                mkdir -p $out/bin
+                cp $src/bootstrap_dots $out/bin/bootstrap_dots
+                cp $src/bin/* $out/bin
+              '';
             };
-          };
-        })
-      ] ++ [dots];
+          packages = with pkgs; [
+            fzf
+            tmux
+            curl
+            wget
+            ripgrep
+            unzip
+            fish
+            zsh
+            git
+            (neovim.override {
+              vimAlias = true;
+              viAlias = true;
+              configure = {
+                customLuaRC = ''
+                  require("sam")
+                  vim.g.gruvbox_material_enable_italic = true
+                  vim.cmd.colorscheme('gruvbox-material')
+                '';
+                packages.myVimPackage = with pkgs.vimPlugins; {
+                  start = [
+                    /* tools */
+                    telescope-nvim
+                    harpoon2
+                    oil-nvim
+                    codecompanion-nvim
+                    vim-fugitive
+                    undotree
+                    flash-nvim
+                    diffview-nvim
+                    nvim-autopairs
+                    comment-nvim
+                    quickfix-reflector-vim
+                    tabular
+                    /* lsp stuff */
+                    nvim-lspconfig
+                    nvim-lint
+                    /* Code completions */
+                    blink-cmp
+                    /* Code naviagation */
+                    flash-nvim
+                    /* Visual */
+                    gruvbox-material
+                    nvim-treesitter.withAllGrammars
+                    lualine-nvim
+                    indent-blankline-nvim
+                    nui-nvim
+                    gitsigns-nvim
+                    /* Dependencies */
+                    vim-repeat
+                    vim-sensible
+                  ];
+                };
+              };
+            })
+          ] ++ [dots];
+        in
+            {
+                default = pkgs.buildEnv {
+                  name = "MyDevEnv";
+                  paths = packages;
+                };
+            };
     in
     {
-      packages.x86_64-linux = {
-        default = pkgs.buildEnv {
-          name = "MyDevEnv";
-          paths = packages;
-        };
-      };
+        packages = forAllSystems (system: generate system);
     };
 }
