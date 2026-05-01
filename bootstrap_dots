@@ -8,7 +8,7 @@ for d in $(ls ${dots}/config); do
         rm -r ${home}/.config/$d
     fi
     cp -r ${dots}/config/$d ${home}/.config
-    chmod +w ${home}/.config/$d
+    chmod -R +w ${home}/.config/$d
 done
 # Symlink home dir dot files
 [ -e ${home}/.zshenv ] || ln -s ${dots}/.zshenv ${home}/.zshenv
