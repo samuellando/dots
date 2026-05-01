@@ -45,6 +45,7 @@
             fish
             zsh
             git
+            tree-sitter
             (neovim.override {
               vimAlias = true;
               viAlias = true;
