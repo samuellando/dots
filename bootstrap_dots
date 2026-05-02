@@ -1,17 +1,51 @@
 #!/bin/sh
-dots=${1:-~/.nix-profile/share/home}
-home=${2:-~}
+
+force=0
+dots=""
+home=""
+
+# Parse arguments
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -f|--force)
+            force=1
+            ;;
+        *)
+            if [ -z "$home" ]; then
+                home=$1
+            elif [ -z "$dots" ]; then
+                dots=$1
+            fi
+            ;;
+    esac
+    shift
+done
+
+# defaults
+if [ -z "$home" ]; then
+    home=${home:-~}
+fi
+if [ -z "$dots" ]; then
+    dots=${dots:-~/.nix-profile/share/home}
+fi
+
 # copy/replace all config files
-mkdir -p ${home}/.config
-for d in $(ls ${dots}/config); do
-    if [ -e ${home}/.config/$d ]; then
-        rm -r ${home}/.config/$d
+mkdir -p "${home}/.config"
+for d in $(ls "${dots}/config"); do
+    if [ -e "${home}/.config/$d" ]; then
+        if [ $force -eq 1 ]; then
+            rm -r "${home}/.config/$d"
+        else
+            echo "Error: ${home}/.config/$d exists. Use -f to overwrite." >&2
+            exit 1
+        fi
     fi
-    cp -r ${dots}/config/$d ${home}/.config
-    chmod -R +w ${home}/.config/$d
+    cp -r "${dots}/config/$d" "${home}/.config"
+    chmod -R +w "${home}/.config/$d"
 done
 # Symlink home dir dot files
-[ -e ${home}/.zshenv ] || ln -s ${dots}/.zshenv ${home}/.zshenv
+[ -e "${home}/.zshenv" ] || ln -s "${dots}/.zshenv" "${home}/.zshenv"
 # Copy the default files for environment specific configs
-[ -e ${home}/.fishrc.fish ] || cp ${dots}/.fishrc.fish ${home}/.fishrc.fish
-[ -e ${home}/.anacrontab ] || cp ${dots}/.anacrontab ${home}/.anacrontab
+[ -e "${home}/.fishrc.fish" ] || cp "${dots}/.fishrc.fish" "${home}/.fishrc.fish"
+[ -e "${home}/.anacrontab" ] || cp "${dots}/.anacrontab" "${home}/.anacrontab"
+
