@@ -3,6 +3,7 @@ if status is-interactive
     fish_vi_key_bindings
     set fish_cursor_default block
     set fish_cursor_insert line
+    set fish_color_command blue
 
     function envsource
       for line in (cat $argv | grep -v '^#' | grep -v '^\s*$')
