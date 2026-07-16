@@ -22,14 +22,18 @@ bootstrap_dots
 
 ### Container build
 
-If this needs to be instal a container:
+For systems where setting up the development environment in a container. 
+The following steps will create a ubuntu container with nix 
+installed. The development environment can then be installed using the commands
+from above.
+
 ```
 docker build --build-arg USR=[username] --build-arg USR_PASSWD=[passwd] .
 ```
 
 And then run the container
 ```
-docker run -dt -p 2222:22 -t devbox devbox:latest 
+docker run -dt -p 2222:22 --name devbox devbox:latest 
 ```
 
 You should then be able to ssh into the container with 
