@@ -1,5 +1,6 @@
 
 vim.keymap.set("n", "gh", vim.lsp.buf.hover)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
 vim.lsp.enable("lua_ls")
